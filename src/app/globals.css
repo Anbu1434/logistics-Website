@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Brand Color Tokens */
+  --cream-50: #FBF8F3;
+  --cream-100: #F4EEE4;
+  --cream-200: #E9DFD0;
+  --sage-100: #E6ECDD;
+  --sage-300: #B9C8A8;
+  --sage-500: #7A916B;
+  --forest-600: #3F5A2E;
+  --forest-800: #24351B;
+  --forest-900: #172311;
+  --ink-900: #1C1F1A;
+  --ink-500: #5E655A;
+  --clay-400: #C98F72;
+  --clay-500: #B6795B;
+  --gold-500: #B8935A;
+  --success: #2E7D4F;
+  --warning: #B7791F;
+  --danger: #B3392F;
+
+  /* App Base Defaults */
+  --background: var(--cream-50);
+  --foreground: var(--ink-900);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  color: var(--foreground);
+  background-color: var(--background);
+  font-feature-settings: "rlig" 1, "calt" 1;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* Accessibility: respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Custom Scrollbar for Luxury Aesthetic */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--cream-100);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--sage-300);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--forest-600);
+}
+
+/* Focus styles for WCAG AA compliance */
+:focus-visible {
+  outline: 2px solid var(--forest-800);
+  outline-offset: 2px;
+}
+
+/* Glass / Frosted overlay effect used in floating badges and cards */
+.frosted-glass {
+  background: rgba(251, 248, 243, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(233, 223, 208, 0.6);
+}
+
+.frosted-dark {
+  background: rgba(36, 53, 27, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
