@@ -72,3 +72,4 @@ c:\Users\anbu\Desktop\E-commerce\
 - **Keyboard Navigation:** Native skip link (`#main-content`), focusable pill buttons with visible focus rings, full ESC and focus-trap behavior on modals.
 - **Prefers Reduced Motion:** Automated CSS override disables all transitions and keyframe animations when requested by OS settings.
 - **Strict Server Validation:** All product pricing, discount calculations, inventory assertions, and checkout sessions run on the server layer.
+

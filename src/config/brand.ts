@@ -94,3 +94,4 @@ export const brandConfig: BrandConfig = {
 };
 
 export default brandConfig;
+

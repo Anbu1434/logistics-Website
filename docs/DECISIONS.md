@@ -32,3 +32,4 @@
   - All form fields linked via `aria-describedby` to error and helper texts.
   - Buttons enforce 44x44px minimum touch targets and clear 2px offset `:focus-visible` rings.
   - Motion respects `@media (prefers-reduced-motion: reduce)`.
+

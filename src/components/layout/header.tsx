@@ -12,9 +12,10 @@ import {
   X,
   Sparkles,
   ArrowRight,
+  Loader2,
 } from "lucide-react";
 import brandConfig from "@/config/brand";
-import { cn } from "@/lib/utils";
+import { cn, formatCurrency } from "@/lib/utils";
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
@@ -27,12 +28,26 @@ const NAV_LINKS = [
   { label: "Journal", href: "/journal" },
 ];
 
+interface LiveSearchResult {
+  id: string;
+  name: string;
+  slug: string;
+  subtitle: string | null;
+  price: number;
+  badge: string | null;
+  categoryName: string | null;
+}
+
 export function Header() {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = React.useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [searchOpen, setSearchOpen] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
+  const [searchResults, setSearchResults] = React.useState<LiveSearchResult[]>([]);
+  const [isSearching, setIsSearching] = React.useState(false);
+  const [isSearchFocused, setIsSearchFocused] = React.useState(false);
+  const searchContainerRef = React.useRef<HTMLDivElement>(null);
 
   // Track scroll for sticky navbar shadow
   React.useEffect(() => {
@@ -42,6 +57,42 @@ export function Header() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Handle outside click to dismiss search dropdown
+  React.useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(e.target as Node)) {
+        setIsSearchFocused(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Debounced live search
+  React.useEffect(() => {
+    if (!searchQuery.trim() || searchQuery.length < 2) {
+      setSearchResults([]);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setIsSearching(true);
+      try {
+        const res = await fetch(`/api/search?q=${encodeURIComponent(searchQuery)}`);
+        if (res.ok) {
+          const data = await res.json();
+          setSearchResults(data.results || []);
+        }
+      } catch (err) {
+        console.error("Live search failed:", err);
+      } finally {
+        setIsSearching(false);
+      }
+    }, 250);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   return (
     <>
@@ -116,12 +167,13 @@ export function Header() {
 
             {/* Right Action Icons & Search */}
             <div className="flex items-center gap-2 sm:gap-3">
-              {/* Pill Search bar (desktop) */}
-              <div className="relative hidden md:block">
+              {/* Pill Search bar (desktop) with live autocomplete */}
+              <div ref={searchContainerRef} className="relative hidden md:block">
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
                     if (searchQuery.trim()) {
+                      setIsSearchFocused(false);
                       window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
                     }
                   }}
@@ -130,12 +182,59 @@ export function Header() {
                   <Search className="w-4 h-4 text-ink-500 absolute left-3.5 pointer-events-none" />
                   <input
                     type="search"
-                    placeholder="Search skincare..."
+                    placeholder="Search skincare, serums..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-48 lg:w-60 h-10 pl-9 pr-4 rounded-pill bg-cream-100 border border-cream-200/80 text-xs text-ink-900 placeholder:text-ink-500/70 focus:outline-none focus:ring-2 focus:ring-forest-800 focus:w-64 transition-all"
+                    onFocus={() => setIsSearchFocused(true)}
+                    className="w-48 lg:w-64 h-10 pl-9 pr-8 rounded-pill bg-cream-100 border border-cream-200/80 text-xs text-ink-900 placeholder:text-ink-500/70 focus:outline-none focus:ring-2 focus:ring-forest-800 focus:w-72 transition-all"
                   />
+                  {isSearching && (
+                    <Loader2 className="w-3.5 h-3.5 text-forest-800 animate-spin absolute right-3 pointer-events-none" />
+                  )}
                 </form>
+
+                {/* Autocomplete Dropdown */}
+                {isSearchFocused && searchResults.length > 0 && (
+                  <div className="absolute top-12 left-0 right-0 w-80 bg-cream-50 rounded-card shadow-floating border border-cream-200/90 overflow-hidden z-50 animate-fadeIn">
+                    <div className="p-3 bg-cream-100/70 border-b border-cream-200 text-[11px] font-semibold uppercase tracking-wider text-forest-800">
+                      Product Suggestions
+                    </div>
+                    <div className="divide-y divide-cream-200/60 max-h-72 overflow-y-auto">
+                      {searchResults.map((item) => (
+                        <Link
+                          key={item.id}
+                          href={`/products/${item.slug}`}
+                          onClick={() => {
+                            setIsSearchFocused(false);
+                            setSearchQuery("");
+                          }}
+                          className="flex items-center justify-between p-3 hover:bg-cream-100 transition-colors group"
+                        >
+                          <div className="space-y-0.5">
+                            <h4 className="text-xs font-semibold text-ink-900 group-hover:text-forest-800">
+                              {item.name}
+                            </h4>
+                            {item.subtitle && (
+                              <p className="text-[10px] text-ink-500">{item.subtitle}</p>
+                            )}
+                          </div>
+                          <span className="text-xs font-medium text-forest-800 shrink-0 ml-2">
+                            {formatCurrency(item.price)}
+                          </span>
+                        </Link>
+                      ))}
+                    </div>
+                    <div className="p-2.5 bg-cream-100/40 text-center border-t border-cream-200">
+                      <Link
+                        href={`/search?q=${encodeURIComponent(searchQuery)}`}
+                        onClick={() => setIsSearchFocused(false)}
+                        className="text-xs font-semibold text-forest-800 hover:underline"
+                      >
+                        View all results for &quot;{searchQuery}&quot; →
+                      </Link>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Mobile Search Icon Toggle */}
