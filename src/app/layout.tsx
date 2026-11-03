@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import brandConfig from "@/config/brand";
+import { StoreProvider } from "@/context/store-context";
+import { CartDrawer } from "@/components/cart/cart-drawer";
 
 export const metadata: Metadata = {
   title: {
@@ -40,9 +42,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body className="bg-cream-50 text-ink-900 font-sans antialiased selection:bg-sage-300 selection:text-forest-900">
-        <div className="flex min-h-screen flex-col">
-          {children}
-        </div>
+        <StoreProvider>
+          <div className="flex min-h-screen flex-col">
+            {children}
+          </div>
+          <CartDrawer />
+        </StoreProvider>
       </body>
     </html>
   );

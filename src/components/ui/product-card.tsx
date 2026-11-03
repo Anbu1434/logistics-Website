@@ -9,6 +9,7 @@ import { PriceBlock } from "./price-block";
 import { Button } from "./button";
 import { Badge } from "./badge";
 import { cn } from "@/lib/utils";
+import { useStore } from "@/context/store-context";
 
 export interface ProductCardProps {
   id: string;
@@ -21,6 +22,8 @@ export interface ProductCardProps {
   reviewCount?: number;
   image?: string | null;
   badge?: string;
+  variantId?: string;
+  size?: string;
   isWishlisted?: boolean;
   onToggleWishlist?: (id: string) => void;
   onAddToCart?: (id: string) => void;
@@ -38,29 +41,56 @@ export function ProductCard({
   reviewCount = 96,
   image,
   badge,
-  isWishlisted = false,
+  variantId,
+  size = "50ml",
+  isWishlisted: propIsWishlisted,
   onToggleWishlist,
   onAddToCart,
   className,
 }: ProductCardProps) {
-  const [wishlistActive, setWishlistActive] = React.useState(isWishlisted);
+  const store = useStore();
   const [isAdding, setIsAdding] = React.useState(false);
+
+  const isWishlisted =
+    propIsWishlisted !== undefined ? propIsWishlisted : store.isInWishlist(id);
 
   const handleWishlistClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setWishlistActive(!wishlistActive);
-    onToggleWishlist?.(id);
+    if (onToggleWishlist) {
+      onToggleWishlist(id);
+    } else {
+      store.toggleWishlist(id);
+    }
   };
 
   const handleAddToCartClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setIsAdding(true);
-    setTimeout(() => {
-      setIsAdding(false);
-      onAddToCart?.(id);
-    }, 400);
+
+    if (onAddToCart) {
+      setTimeout(() => {
+        setIsAdding(false);
+        onAddToCart(id);
+      }, 300);
+    } else {
+      setTimeout(() => {
+        setIsAdding(false);
+        store.addToCart({
+          productId: id,
+          variantId: variantId || `var-${id}`,
+          name,
+          subtitle,
+          size,
+          price,
+          compareAtPrice,
+          image: image || "",
+          quantity: 1,
+          maxStock: 20,
+        });
+      }, 300);
+    }
   };
 
   return (
@@ -86,13 +116,13 @@ export function ProductCard({
           <button
             type="button"
             onClick={handleWishlistClick}
-            aria-label={wishlistActive ? `Remove ${name} from wishlist` : `Add ${name} to wishlist`}
+            aria-label={isWishlisted ? `Remove ${name} from wishlist` : `Add ${name} to wishlist`}
             className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-cream-50/90 backdrop-blur-sm flex items-center justify-center text-ink-900 transition-transform duration-200 hover:scale-110 active:scale-95 shadow-subtle"
           >
             <Heart
               className={cn(
                 "w-4 h-4 transition-colors",
-                wishlistActive ? "fill-clay-400 text-clay-400" : "text-ink-500 hover:text-ink-900"
+                isWishlisted ? "fill-clay-400 text-clay-400" : "text-ink-500 hover:text-ink-900"
               )}
             />
           </button>
@@ -154,4 +184,3 @@ export function ProductCard({
     </div>
   );
 }
-

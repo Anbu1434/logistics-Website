@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 export interface BreadcrumbItem {
   label: string;
   href?: string;
+  current?: boolean;
 }
 
 export interface BreadcrumbProps {
@@ -18,7 +19,7 @@ export function Breadcrumb({ items, className }: BreadcrumbProps) {
     <nav aria-label="Breadcrumb" className={cn("flex items-center", className)}>
       <ol className="flex items-center flex-wrap gap-1.5 text-xs text-ink-500">
         {items.map((item, index) => {
-          const isLast = index === items.length - 1;
+          const isLast = index === items.length - 1 || item.current;
 
           return (
             <li key={index} className="inline-flex items-center gap-1.5">
@@ -48,4 +49,3 @@ export function Breadcrumb({ items, className }: BreadcrumbProps) {
     </nav>
   );
 }
-

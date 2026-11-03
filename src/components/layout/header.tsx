@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import brandConfig from "@/config/brand";
 import { cn, formatCurrency } from "@/lib/utils";
+import { useStore } from "@/context/store-context";
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
@@ -25,7 +26,7 @@ const NAV_LINKS = [
   { label: "Haircare", href: "/collections/haircare" },
   { label: "Combos", href: "/collections/combos" },
   { label: "About", href: "/about" },
-  { label: "Journal", href: "/journal" },
+  { label: "Ingredients", href: "/ingredients" },
 ];
 
 interface LiveSearchResult {
@@ -40,6 +41,8 @@ interface LiveSearchResult {
 
 export function Header() {
   const pathname = usePathname();
+  const { cartCount, openCart, wishlistCount } = useStore();
+
   const [isScrolled, setIsScrolled] = React.useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [searchOpen, setSearchOpen] = React.useState(false);
@@ -218,7 +221,7 @@ export function Header() {
                               <p className="text-[10px] text-ink-500">{item.subtitle}</p>
                             )}
                           </div>
-                          <span className="text-xs font-medium text-forest-800 shrink-0 ml-2">
+                          <span className="text-xs font-bold text-ink-900">
                             {formatCurrency(item.price)}
                           </span>
                         </Link>
@@ -228,9 +231,9 @@ export function Header() {
                       <Link
                         href={`/search?q=${encodeURIComponent(searchQuery)}`}
                         onClick={() => setIsSearchFocused(false)}
-                        className="text-xs font-semibold text-forest-800 hover:underline"
+                        className="text-xs font-semibold text-forest-800 hover:underline inline-flex items-center gap-1"
                       >
-                        View all results for &quot;{searchQuery}&quot; →
+                        View all results <ArrowRight className="w-3 h-3" />
                       </Link>
                     </div>
                   </div>
@@ -249,24 +252,32 @@ export function Header() {
 
               {/* Wishlist Link */}
               <Link
-                href="/account/wishlist"
-                aria-label="View Wishlist (0 items)"
+                href="/wishlist"
+                aria-label={`View Wishlist (${wishlistCount} items)`}
                 className="relative p-2 text-ink-900 rounded-full hover:bg-cream-100 transition-colors focus:outline-none focus:ring-2 focus:ring-forest-800"
               >
                 <Heart className="w-5 h-5" />
+                {wishlistCount > 0 && (
+                  <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-clay-400 text-cream-50 text-[10px] font-bold flex items-center justify-center">
+                    {wishlistCount}
+                  </span>
+                )}
               </Link>
 
               {/* Shopping Bag / Cart Drawer Trigger */}
-              <Link
-                href="/cart"
-                aria-label="View Cart (2 items)"
+              <button
+                type="button"
+                onClick={openCart}
+                aria-label={`Open cart (${cartCount} items)`}
                 className="relative p-2 text-ink-900 rounded-full hover:bg-cream-100 transition-colors focus:outline-none focus:ring-2 focus:ring-forest-800"
               >
                 <ShoppingBag className="w-5 h-5" />
-                <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-forest-800 text-cream-50 text-[10px] font-bold flex items-center justify-center">
-                  2
-                </span>
-              </Link>
+                {cartCount > 0 && (
+                  <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-forest-800 text-cream-50 text-[10px] font-bold flex items-center justify-center">
+                    {cartCount}
+                  </span>
+                )}
+              </button>
 
               {/* User Account */}
               <Link
@@ -347,13 +358,24 @@ export function Header() {
                     </Link>
                   ))}
                   <Link
-                    href="/quiz"
+                    href="/wishlist"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="mt-2 py-2 text-sm font-semibold text-clay-500 flex items-center justify-between"
+                    className="py-2 text-sm font-semibold text-ink-900 flex items-center justify-between border-b border-cream-200/50"
                   >
-                    <span>Skin Routine Quiz</span>
-                    <Sparkles className="w-4 h-4 text-clay-400" />
+                    <span>My Wishlist ({wishlistCount})</span>
+                    <Heart className="w-4 h-4 text-clay-400" />
                   </Link>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      openCart();
+                    }}
+                    className="py-2 text-sm font-semibold text-ink-900 flex items-center justify-between border-b border-cream-200/50 text-left"
+                  >
+                    <span>Bag ({cartCount})</span>
+                    <ShoppingBag className="w-4 h-4 text-forest-800" />
+                  </button>
                 </nav>
               </div>
 

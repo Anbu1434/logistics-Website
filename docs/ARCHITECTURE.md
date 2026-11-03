@@ -6,45 +6,44 @@ Verdéa is architected as a production-grade, modular Next.js App Router applica
 
 ```
 c:\Users\anbu\Desktop\E-commerce\
+├── prisma\                       # Database schema, seed data & migrations
+│   ├── schema.prisma             # Full e-commerce schema (Products, Variants, Orders, Users, Reviews)
+│   └── seed.ts                   # 32+ realistic products, categories, concerns & ingredients
 ├── src\
 │   ├── app\                      # App Router routes and pages
-│   │   ├── layout.tsx            # Global HTML shell, fonts, SEO metadata
+│   │   ├── layout.tsx            # Global HTML shell, StoreProvider & CartDrawer
 │   │   ├── globals.css           # CSS variables, tokens, WCAG focus rules
-│   │   ├── page.tsx              # Storefront Homepage
-│   │   ├── home-client.tsx       # Interactive Homepage client view
-│   │   └── styleguide\           # Design System & token documentation
-│   │       ├── page.tsx          # Server route with noindex metadata
-│   │       └── styleguide-client.tsx # Interactive component catalogue
+│   │   ├── page.tsx              # Storefront Homepage (Server Component with DB hydration)
+│   │   ├── home-client.tsx       # Interactive 3-slide Hero, Best Sellers, Concern & Review sections
+│   │   ├── collections\[slug]\   # Faceted category & collection listings with URL query state
+│   │   ├── products\[slug]\      # Full PDP with gallery, variants, subscribe & save, INCI, JSON-LD
+│   │   ├── search\               # Live debounced search, synonym matching & recovery recommendations
+│   │   ├── cart\                 # Dedicated full-page shopping bag with free shipping meter
+│   │   ├── wishlist\             # Customer saved formulations with quick add-to-bag
+│   │   ├── about\                # Brand philosophy, clinical formulation standards, 3 pillars
+│   │   ├── ingredients\          # Complete ingredients glossary with INCI names & benefits
+│   │   ├── faq\                  # Categorized accordion knowledge base
+│   │   ├── shipping-returns\     # Logistics policies, timelines & 30-day gentle guarantee
+│   │   ├── contact\              # Inquiry router form with bot protection
+│   │   ├── privacy\              # GDPR, CCPA & DPDP compliant privacy policy
+│   │   ├── terms\                # Terms of service and cosmetic disclosures
+│   │   ├── styleguide\           # Component library and design token documentation
+│   │   └── api\search\           # Debounced catalog search endpoint
 │   ├── components\
-│   │   ├── layout\               # Global layout primitives
-│   │   │   ├── announcement-bar.tsx # Dismissible free-shipping notification bar
-│   │   │   ├── header.tsx        # Sticky header, search pill, cart badge
-│   │   │   └── footer.tsx        # Trust strip, newsletter, brand links
-│   │   └── ui\                   # Atomic design system components
-│   │       ├── button.tsx        # Pill buttons with arrow indicator & loading
-│   │       ├── badge.tsx         # Botanical & status tags
-│   │       ├── rating-stars.tsx  # Accessible ratings & review counters
-│   │       ├── price-block.tsx   # Formatted currency & savings badge
-│   │       ├── image-slot.tsx    # Next/Image wrapper with gradient fallbacks
-│   │       ├── product-card.tsx  # Best seller / catalog product cards
-│   │       ├── quantity-stepper.tsx # Stepper controls with bounds validation
-│   │       ├── variant-selector.tsx # Sizes & shade swatch selectors
-│   │       ├── accordion.tsx     # Radix-powered accessible accordions
-│   │       ├── tabs.tsx          # Radix-powered tabs
-│   │       ├── breadcrumb.tsx    # Breadcrumb trail
-│   │       ├── modal.tsx         # Radix-powered accessible modal dialogs
-│   │       ├── form-field.tsx    # Inputs & textareas with error states
-│   │       └── skeleton.tsx      # Shimmer loading cards
-│   ├── config\
-│   │   └── brand.ts              # Brand parameters, currencies, addresses
+│   │   ├── cart\cart-drawer.tsx  # Accessible slide-over bag drawer
+│   │   ├── layout\               # Global announcement bar, sticky header & footer
+│   │   └── ui\                   # Accessible atomic design system components
+│   ├── context\store-context.tsx # Persistent Cart & Wishlist provider with coupon engine
+│   ├── services\                 # Data layer services (Catalog & Search)
+│   ├── config\brand.ts           # Centralized brand tokens, currencies, policies
 │   └── lib\
+│       ├── db.ts                 # Prisma Client singleton
 │       ├── env.ts                # Zod runtime environment validation
 │       └── utils.ts              # Currency formatters, class merges, sluggers
 ├── docs\
 │   ├── ARCHITECTURE.md           # This document
-│   └── DECISIONS.md              # Architectural decisions
-├── .env.example                  # Documented environment variables
-├── package.json                  # Dependencies & scripts
+│   └── DECISIONS.md              # Architectural decisions (ADRs)
+├── .env.example                  # Fully documented environment secrets
 └── tailwind.config.ts            # Custom design tokens, typography, radii
 ```
 
@@ -69,7 +68,6 @@ c:\Users\anbu\Desktop\E-commerce\
 ## 3. Accessibility & Performance Guardrails
 
 - **Zero Layout Shift (CLS < 0.1):** All images and card media preserve aspect ratios (`aspect-square`, `aspect-[4/5]`).
-- **Keyboard Navigation:** Native skip link (`#main-content`), focusable pill buttons with visible focus rings, full ESC and focus-trap behavior on modals.
+- **Keyboard Navigation:** Native skip link (`#main-content`), focusable pill buttons with visible focus rings, full ESC and focus-trap behavior on modals and drawers.
 - **Prefers Reduced Motion:** Automated CSS override disables all transitions and keyframe animations when requested by OS settings.
-- **Strict Server Validation:** All product pricing, discount calculations, inventory assertions, and checkout sessions run on the server layer.
-
+- **Structured Data:** Automated Schema.org `Product`, `offers`, and `aggregateRating` JSON-LD payloads for rich search results.

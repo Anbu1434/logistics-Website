@@ -168,10 +168,28 @@ export async function getProducts(filters: ProductFilters = {}) {
   };
 
   if (categorySlug && categorySlug !== "all") {
-    where.category = { slug: categorySlug };
+    if (categorySlug === "sale") {
+      where.variants = {
+        some: {
+          compareAtPrice: { not: null },
+        },
+      };
+    } else if (categorySlug === "best-sellers") {
+      where.OR = [
+        { badge: "Best Seller" },
+        { collection: { slug: "best-sellers" } },
+      ];
+    } else if (categorySlug === "new") {
+      // handled via sort
+    } else {
+      where.OR = [
+        { category: { slug: categorySlug } },
+        { collection: { slug: categorySlug } },
+      ];
+    }
   }
 
-  if (collectionSlug) {
+  if (collectionSlug && !where.OR) {
     where.collection = { slug: collectionSlug };
   }
 
@@ -205,7 +223,7 @@ export async function getProducts(filters: ProductFilters = {}) {
 
   // Sorting
   let orderBy: Prisma.ProductOrderByWithRelationInput = { createdAt: "desc" };
-  if (sort === "newest") {
+  if (sort === "newest" || categorySlug === "new") {
     orderBy = { createdAt: "desc" };
   } else if (sort === "featured") {
     orderBy = { isFeatured: "desc" };
@@ -213,13 +231,11 @@ export async function getProducts(filters: ProductFilters = {}) {
 
   const skip = (page - 1) * limit;
 
-  const [totalCount, products] = await Promise.all([
+  const [totalCount, rawProducts] = await Promise.all([
     db.product.count({ where }),
     db.product.findMany({
       where,
       orderBy,
-      skip,
-      take: limit,
       include: {
         category: true,
         collection: true,
@@ -237,8 +253,39 @@ export async function getProducts(filters: ProductFilters = {}) {
     }),
   ]);
 
+  let products = rawProducts;
+
+  // In-memory sort for relation fields if needed (e.g. price-asc, price-desc, rating)
+  if (sort === "price-asc") {
+    products = products.sort((a, b) => {
+      const pA = a.variants[0]?.price || 0;
+      const pB = b.variants[0]?.price || 0;
+      return pA - pB;
+    });
+  } else if (sort === "price-desc") {
+    products = products.sort((a, b) => {
+      const pA = a.variants[0]?.price || 0;
+      const pB = b.variants[0]?.price || 0;
+      return pB - pA;
+    });
+  } else if (sort === "rating") {
+    products = products.sort((a, b) => {
+      const rA =
+        a.reviews.length > 0
+          ? a.reviews.reduce((acc, r) => acc + r.rating, 0) / a.reviews.length
+          : 0;
+      const rB =
+        b.reviews.length > 0
+          ? b.reviews.reduce((acc, r) => acc + r.rating, 0) / b.reviews.length
+          : 0;
+      return rB - rA;
+    });
+  }
+
+  const paginatedProducts = products.slice(skip, skip + limit);
+
   return {
-    products,
+    products: paginatedProducts,
     pagination: {
       totalCount,
       totalPages: Math.ceil(totalCount / limit),
@@ -247,4 +294,3 @@ export async function getProducts(filters: ProductFilters = {}) {
     },
   };
 }
-

@@ -23,6 +23,10 @@ export interface BrandConfig {
     locale: string;
     freeShippingThreshold: number; // in minor units or whole units
   };
+  shipping: {
+    freeShippingThreshold: number;
+    standardRate: number;
+  };
   socialLinks: {
     instagram: string;
     facebook: string;
@@ -54,10 +58,14 @@ export const brandConfig: BrandConfig = {
     country: "India",
   },
   currency: {
-    code: "INR",
-    symbol: "₹",
-    locale: "en-IN",
-    freeShippingThreshold: 999, // ₹999 free shipping
+    code: "USD",
+    symbol: "$",
+    locale: "en-US",
+    freeShippingThreshold: 50,
+  },
+  shipping: {
+    freeShippingThreshold: 50,
+    standardRate: 5,
   },
   socialLinks: {
     instagram: "https://instagram.com/verdeaskincare",
@@ -94,4 +102,3 @@ export const brandConfig: BrandConfig = {
 };
 
 export default brandConfig;
-

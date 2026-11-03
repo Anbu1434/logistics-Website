@@ -33,3 +33,17 @@
   - Buttons enforce 44x44px minimum touch targets and clear 2px offset `:focus-visible` rings.
   - Motion respects `@media (prefers-reduced-motion: reduce)`.
 
+## ADR-005: Client-Side Persistent Cart & Wishlist State with Dynamic Free Shipping
+- **Date:** 2026-11-03
+- **Context:** Customers require persistent cart and wishlist state across browser sessions with real-time free shipping threshold messaging and coupon application without page reloads.
+- **Decision:**
+  - Implemented `StoreContext` with `localStorage` persistence and fallback safety.
+  - Built an accessible slide-over `CartDrawer` with free-shipping threshold bar, coupon engine, line item controls, and sticky mobile trigger.
+  - Wishlist persists locally and synchronizes count badges across header, mobile menu, and individual product cards.
+
+## ADR-006: Faceted Catalog & Dynamic Product Detail Architecture
+- **Date:** 2026-11-03
+- **Context:** Customers require intuitive category browsing, skin concern filtering, price range sorting, and comprehensive ingredient transparency.
+- **Decision:**
+  - Built SSR `/collections/[slug]` with query param syncing, mobile drawer, active filter chips, and pagination.
+  - Implemented `/products/[slug]` with image gallery thumbnail switcher, variant size swatches, subscribe-and-save 10% discount toggle, full INCI breakdown, routine cross-sells, customer reviews, and Schema.org JSON-LD structured data.
