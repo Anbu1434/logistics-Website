@@ -1,15 +1,23 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  optimizeFonts: false,
   images: {
-    remotePatterns: [
+    formats: ['image/avif', 'image/webp'],
+  },
+  async redirects() {
+    return [
       {
-        protocol: "https",
-        hostname: "**",
+        source: '/quote',
+        destination: '/?quote=open',
+        permanent: false,
       },
-    ],
+      {
+        source: '/track',
+        destination: '/?track=open',
+        permanent: false,
+      },
+    ];
   },
 };
 
 export default nextConfig;
+
