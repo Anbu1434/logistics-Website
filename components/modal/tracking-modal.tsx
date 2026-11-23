@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { motion } from "framer-motion";
 import {
   X,
   PackageSearch,
@@ -10,6 +11,8 @@ import {
 } from "lucide-react";
 import { useTrackingModal } from "@/context/tracking-modal-context";
 import { Button } from "@/components/ui/button";
+import { Modal } from "@/components/motion/modal";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 
 interface TrackingEvent {
@@ -80,9 +83,11 @@ const DEFAULT_SHIPMENT: ShipmentData = {
 
 export function TrackingModal() {
   const { isOpen, trackingId, closeTrackingModal } = useTrackingModal();
+  const reducedMotion = useReducedMotion();
   const [inputVal, setInputVal] = React.useState(trackingId);
-  const [activeShipment, setActiveShipment] = React.useState<ShipmentData | null>(DEFAULT_SHIPMENT);
+  const [activeShipment, setActiveShipment] = React.useState<ShipmentData | null>(null);
   const [isSearching, setIsSearching] = React.useState(false);
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   const handleLookup = (id: string) => {
     setIsSearching(true);
@@ -138,33 +143,20 @@ export function TrackingModal() {
     }, 250);
   };
 
-  // Sync tracking ID when opened
-  React.useEffect(() => {
-    if (trackingId) {
-      setInputVal(trackingId.toUpperCase());
-      handleLookup(trackingId.toUpperCase());
-    }
-  }, [trackingId]);
-
-  // Lock body scroll and handle Escape key while modal is open
+  // Sync tracking ID when the modal opens. With no ID, start from a prompt
+  // state instead of showing someone else's shipment.
   React.useEffect(() => {
     if (!isOpen) return;
 
-    const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        closeTrackingModal();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.body.style.overflow = originalOverflow;
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isOpen, closeTrackingModal]);
+    if (trackingId) {
+      setInputVal(trackingId.toUpperCase());
+      handleLookup(trackingId.toUpperCase());
+    } else {
+      setInputVal("");
+      setActiveShipment(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, trackingId]);
 
   const onFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -172,40 +164,29 @@ export function TrackingModal() {
     handleLookup(inputVal.trim());
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="tracking-modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 md:p-6 overflow-y-auto bg-navy-900/80 backdrop-blur-md animate-in fade-in duration-200 select-none"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) {
-          closeTrackingModal();
-        }
-      }}
+    <Modal
+      open={isOpen}
+      onClose={closeTrackingModal}
+      labelledBy="tracking-modal-title"
+      className="w-full max-w-[820px] my-auto"
+      initialFocusRef={inputRef}
     >
-      <div
-        className={cn(
-          "relative w-full max-w-[820px] my-auto bg-white rounded-[24px] sm:rounded-[28px] border-2 border-slate-200/90 shadow-2xl overflow-hidden",
-          "animate-in zoom-in-95 duration-200 ease-out flex flex-col max-h-[92vh]"
-        )}
-      >
+      <div className="relative w-full bg-white rounded-[24px] sm:rounded-[28px] border-2 border-slate-200/90 shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
         {/* Floating Close Button */}
         <button
           type="button"
           onClick={closeTrackingModal}
-          className="absolute top-4 right-4 z-30 w-9 h-9 rounded-full bg-white/90 hover:bg-white text-navy-900 shadow-md flex items-center justify-center transition-all hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-orange-500 cursor-pointer"
+          className="absolute top-4 right-4 z-30 w-9 h-9 rounded-full bg-white/90 hover:bg-white text-navy-900 shadow-md flex items-center justify-center motion-safe:transition-transform motion-safe:duration-150 motion-safe:hover:scale-105 motion-safe:active:scale-95 focus-visible:outline-2 focus-visible:outline-ocean-600 cursor-pointer"
           aria-label="Close tracking modal"
         >
-          <X className="w-5 h-5" strokeWidth={2.2} />
+          <X className="w-5 h-5" strokeWidth={2.2} aria-hidden="true" />
         </button>
 
         {/* Top Header & Search Bar Bar */}
         <div className="bg-[#F8FAFD] p-5 sm:p-6 border-b border-line flex flex-col gap-3">
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-orange-500 animate-pulse" />
+            <span className="w-2.5 h-2.5 rounded-full bg-orange-500" aria-hidden="true" />
             <h2 id="tracking-modal-title" className="font-display font-bold text-[18px] sm:text-[20px] text-navy-900">
               Live Shipment Telemetry
             </h2>
@@ -215,11 +196,13 @@ export function TrackingModal() {
             <div className="relative flex-1">
               <PackageSearch className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
+                ref={inputRef}
                 type="text"
                 value={inputVal}
                 onChange={(e) => setInputVal(e.target.value)}
                 placeholder="e.g. LG-2026-004981"
-                className="w-full h-[46px] pl-11 pr-4 bg-white text-ink placeholder:text-slate-400 font-mono text-[15px] font-semibold rounded-lg border border-line focus:outline-none focus:ring-2 focus:ring-orange-500 uppercase transition-all"
+                aria-label="Shipment tracking ID"
+                className="w-full h-[46px] pl-11 pr-4 bg-white text-ink placeholder:text-slate-400 font-mono text-[15px] font-semibold rounded-lg border border-line focus:outline-none focus:ring-2 focus:ring-orange-500 uppercase transition-[border-color,box-shadow] duration-150"
                 required
               />
             </div>
@@ -261,8 +244,37 @@ export function TrackingModal() {
 
         {/* Scrollable Status Content */}
         <div className="overflow-y-auto flex-1">
+          {!activeShipment && !isSearching && (
+            <div className="flex flex-col items-center gap-3 px-6 py-12 sm:py-16 text-center">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-sky-50 border border-line">
+                <PackageSearch
+                  className="h-6 w-6 text-ocean-600"
+                  strokeWidth={1.5}
+                  aria-hidden="true"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <h3 className="font-display font-bold text-[17px] text-navy-900">
+                  Track a shipment
+                </h3>
+                <p className="max-w-[340px] font-sans text-[13.5px] leading-relaxed text-slate-600">
+                  Enter a tracking ID above to see live telemetry, route
+                  milestones, and estimated arrival.
+                </p>
+              </div>
+            </div>
+          )}
+
           {activeShipment && (
-            <div>
+            <motion.div
+              key={`${activeShipment.trackingId}-${activeShipment.serviceType}`}
+              initial={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: reducedMotion ? 0.15 : 0.25,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            >
               {/* Header Bar */}
               <div className="bg-navy-900 text-white p-5 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-3">
                 <div>
@@ -271,7 +283,7 @@ export function TrackingModal() {
                       {activeShipment.trackingId}
                     </span>
                     <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-ocean-600/40 text-sky-200 border border-ocean-600/60">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className="w-2 h-2 rounded-full bg-emerald-400" aria-hidden="true" />
                       {activeShipment.statusLabel}
                     </span>
                   </div>
@@ -342,9 +354,26 @@ export function TrackingModal() {
                   Milestone & Checkpoint Log
                 </h3>
 
-                <div className="relative pl-6 sm:pl-7 space-y-6 before:absolute before:left-3 before:top-2 before:bottom-2 before:w-[2px] before:bg-line">
+                <div className="relative pl-6 sm:pl-7 space-y-6">
+                  <motion.span
+                    className="absolute left-3 top-2 bottom-2 w-[2px] bg-line origin-top"
+                    aria-hidden="true"
+                    initial={{ scaleY: reducedMotion ? 1 : 0 }}
+                    animate={{ scaleY: 1 }}
+                    transition={{ duration: reducedMotion ? 0 : 0.5, ease: "easeOut" }}
+                  />
                   {activeShipment.events.map((evt, idx) => (
-                    <div key={idx} className="relative flex flex-col sm:flex-row sm:items-start justify-between gap-1 sm:gap-4">
+                    <motion.div
+                      key={idx}
+                      className="relative flex flex-col sm:flex-row sm:items-start justify-between gap-1 sm:gap-4"
+                      initial={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{
+                        duration: reducedMotion ? 0.15 : 0.25,
+                        delay: reducedMotion ? 0 : 0.06 + idx * 0.04,
+                        ease: [0.22, 1, 0.36, 1],
+                      }}
+                    >
                       {/* Node Circle */}
                       <span
                         className={`absolute -left-6 sm:-left-7 top-1 w-6 h-6 rounded-full border-2 flex items-center justify-center text-[11px] font-bold ${
@@ -378,15 +407,15 @@ export function TrackingModal() {
                       <span className="font-mono text-[11px] text-slate-500 shrink-0 bg-[#F2F6FB] px-2 py-0.5 rounded border border-line self-start">
                         {evt.timestamp}
                       </span>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </div>
-            </div>
+            </motion.div>
           )}
         </div>
       </div>
-    </div>
+    </Modal>
   );
 }
 

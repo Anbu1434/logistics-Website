@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Eyebrow } from "./eyebrow";
+import { Reveal } from "@/components/motion/reveal";
 import { cn } from "@/lib/utils";
 
 export interface SectionHeadingProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -46,28 +47,32 @@ export function SectionHeading({
       )}
       {...props}
     >
-      {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
+      {eyebrow && (
+        <Reveal y={8} duration={300}>
+          <Eyebrow>{eyebrow}</Eyebrow>
+        </Reveal>
+      )}
 
-      <h2
-        className={cn(
-          "font-display font-bold text-[clamp(30px,4vw,48px)] leading-[1.15] tracking-[-0.015em] [text-wrap:balance]",
-          dark ? "text-white" : "text-ink"
-        )}
-      >
+      <Reveal as="h2" delay={60} y={16} className={cn(
+        "font-display font-bold text-[clamp(30px,4vw,48px)] leading-[1.15] tracking-[-0.015em] [text-wrap:balance]",
+        dark ? "text-white" : "text-ink"
+      )}>
         {renderTitle()}
-      </h2>
+      </Reveal>
 
       {description && (
-        <p
+        <Reveal
+          as="p"
+          delay={120}
+          y={12}
           className={cn(
             "text-[16px] md:text-[18px] leading-[1.65] max-w-[640px]",
             dark ? "text-slate-300" : "text-slate-600"
           )}
         >
           {description}
-        </p>
+        </Reveal>
       )}
     </div>
   );
 }
-

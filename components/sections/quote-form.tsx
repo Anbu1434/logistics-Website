@@ -112,7 +112,7 @@ export function QuoteForm({ className }: { className?: string }) {
     return (
       <div
         className={cn(
-          "w-full bg-white rounded-[26px] sm:rounded-[28px] border border-slate-200/80 shadow-[0_20px_60px_-15px_rgba(11,31,58,0.28)] p-7 sm:p-8 flex flex-col items-center text-center gap-4 animate-in fade-in duration-300",
+          "w-full bg-white rounded-[26px] sm:rounded-[28px] border border-slate-200/80 shadow-[0_20px_60px_-15px_rgba(11,31,58,0.28)] p-7 sm:p-8 flex flex-col items-center text-center gap-4 success-enter",
           className
         )}
       >
@@ -121,7 +121,7 @@ export function QuoteForm({ className }: { className?: string }) {
         </div>
 
         <div className="flex flex-col gap-1">
-          <h3 className="font-display font-bold text-[22px] text-navy-900">
+          <h3 id="quote-modal-title" className="font-display font-bold text-[22px] text-navy-900">
             Quote Request Received
           </h3>
           <p className="font-sans text-[13.5px] text-slate-600 leading-relaxed max-w-[320px]">
@@ -130,7 +130,16 @@ export function QuoteForm({ className }: { className?: string }) {
         </div>
 
         {submissionState.referenceId && (
-          <div className="w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-[12px] p-3 flex flex-col gap-0.5">
+          <div
+            className="motion-rise w-full bg-[#F8FAFC] border border-[#E2E8F0] rounded-[12px] p-3 flex flex-col gap-0.5"
+            style={
+              {
+                "--motion-delay": "100ms",
+                "--rise-distance": "4px",
+                "--rise-duration": "200ms",
+              } as React.CSSProperties
+            }
+          >
             <span className="text-[11px] font-sans uppercase font-semibold text-slate-500 tracking-wider">
               Reference Tracking Number
             </span>
@@ -157,7 +166,7 @@ export function QuoteForm({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "relative w-full overflow-hidden bg-white rounded-[22px] sm:rounded-[24px] border border-[#E2E8F0] shadow-[0_16px_44px_-12px_rgba(11,31,58,0.18)] p-4 sm:p-5 md:p-5.5 flex flex-col text-left select-none",
+        "relative w-full overflow-hidden bg-white rounded-[22px] sm:rounded-[24px] border border-[#E2E8F0] shadow-[0_16px_44px_-12px_rgba(11,31,58,0.18)] p-4 sm:p-5 md:p-6 flex flex-col text-left",
         className
       )}
     >
@@ -192,7 +201,7 @@ export function QuoteForm({ className }: { className?: string }) {
         </div>
 
         {/* Main Headline */}
-        <h3 className="font-display font-bold text-[21px] sm:text-[23px] lg:text-[24px] leading-[1.14] tracking-tight text-navy-900 [text-wrap:balance]">
+        <h3 id="quote-modal-title" className="font-display font-bold text-[21px] sm:text-[23px] lg:text-[24px] leading-[1.14] tracking-tight text-navy-900 [text-wrap:balance]">
           <span>Get a Custom</span><br/>
           <span className="text-orange-500 block sm:inline">Shipping Quote</span>
         </h3>
@@ -202,7 +211,14 @@ export function QuoteForm({ className }: { className?: string }) {
       {submissionState.status === "error" && (
         <div
           role="alert"
-          className="relative z-10 p-2.5 mb-2.5 bg-red-50 border border-red-200 rounded-[10px] flex items-start gap-2 text-[12px] text-red-600 animate-in fade-in"
+          className="motion-rise relative z-10 p-2.5 mb-2.5 bg-red-50 border border-red-200 rounded-[10px] flex items-start gap-2 text-[12px] text-red-600"
+          style={
+            {
+              "--motion-delay": "0ms",
+              "--rise-distance": "4px",
+              "--rise-duration": "180ms",
+            } as React.CSSProperties
+          }
         >
           <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
           <span>{submissionState.errorMessage}</span>
@@ -231,7 +247,7 @@ export function QuoteForm({ className }: { className?: string }) {
             placeholder="Enter your full name"
             {...register("fullName")}
             className={cn(
-              "w-full h-[38px] sm:h-[40px] px-3.5 rounded-[10px] border border-[#E2E8F0] bg-[#F8FAFC] text-navy-900 text-[13px] placeholder:text-slate-400 transition-all",
+              "w-full h-[38px] sm:h-[40px] px-3.5 rounded-[10px] border border-[#E2E8F0] bg-[#F8FAFC] text-navy-900 text-[13px] placeholder:text-slate-400 transition-[background-color,border-color,box-shadow] duration-150",
               "focus:bg-white focus:border-ocean-600 focus:outline-none focus:ring-2 focus:ring-ocean-600/20",
               errors.fullName && "border-red-500 focus:border-red-500 focus:ring-red-500/20"
             )}
@@ -261,7 +277,7 @@ export function QuoteForm({ className }: { className?: string }) {
               placeholder="Enter your phone number"
               {...register("phone")}
               className={cn(
-                "w-full h-[38px] sm:h-[40px] px-3.5 rounded-[10px] border border-[#E2E8F0] bg-[#F8FAFC] text-navy-900 text-[13px] placeholder:text-slate-400 transition-all",
+                "w-full h-[38px] sm:h-[40px] px-3.5 rounded-[10px] border border-[#E2E8F0] bg-[#F8FAFC] text-navy-900 text-[13px] placeholder:text-slate-400 transition-[background-color,border-color,box-shadow] duration-150",
                 "focus:bg-white focus:border-ocean-600 focus:outline-none focus:ring-2 focus:ring-ocean-600/20",
                 errors.phone && "border-red-500 focus:border-red-500 focus:ring-red-500/20"
               )}
@@ -289,7 +305,7 @@ export function QuoteForm({ className }: { className?: string }) {
               placeholder="Enter your company email"
               {...register("email")}
               className={cn(
-                "w-full h-[38px] sm:h-[40px] px-3.5 rounded-[10px] border border-[#E2E8F0] bg-[#F8FAFC] text-navy-900 text-[13px] placeholder:text-slate-400 transition-all",
+                "w-full h-[38px] sm:h-[40px] px-3.5 rounded-[10px] border border-[#E2E8F0] bg-[#F8FAFC] text-navy-900 text-[13px] placeholder:text-slate-400 transition-[background-color,border-color,box-shadow] duration-150",
                 "focus:bg-white focus:border-ocean-600 focus:outline-none focus:ring-2 focus:ring-ocean-600/20",
                 errors.email && "border-red-500 focus:border-red-500 focus:ring-red-500/20"
               )}
@@ -349,7 +365,7 @@ export function QuoteForm({ className }: { className?: string }) {
               <div
                 id="quote-shipmentType-listbox"
                 role="listbox"
-                className="absolute z-50 top-[calc(100%+4px)] left-0 w-full bg-white rounded-[12px] border border-[#E2E8F0] shadow-[0_12px_36px_rgba(11,31,58,0.18)] py-1.5 overflow-hidden animate-in fade-in zoom-in-95 duration-150"
+                className="menu-enter absolute z-50 top-[calc(100%+4px)] left-0 w-full bg-white rounded-[12px] border border-[#E2E8F0] shadow-[0_12px_36px_rgba(11,31,58,0.18)] py-1.5 overflow-hidden"
               >
                 {SHIPMENT_OPTIONS.map((opt) => {
                   const isSelected = selectedShipmentType === opt.value;
@@ -404,7 +420,7 @@ export function QuoteForm({ className }: { className?: string }) {
               placeholder="City, Port, or Zip"
               {...register("pickupLocation")}
               className={cn(
-                "w-full h-[38px] sm:h-[40px] px-3.5 rounded-[10px] border border-[#E2E8F0] bg-[#F8FAFC] text-navy-900 text-[13px] placeholder:text-slate-400 transition-all",
+                "w-full h-[38px] sm:h-[40px] px-3.5 rounded-[10px] border border-[#E2E8F0] bg-[#F8FAFC] text-navy-900 text-[13px] placeholder:text-slate-400 transition-[background-color,border-color,box-shadow] duration-150",
                 "focus:bg-white focus:border-ocean-600 focus:outline-none focus:ring-2 focus:ring-ocean-600/20",
                 errors.pickupLocation && "border-red-500 focus:border-red-500 focus:ring-red-500/20"
               )}
@@ -432,7 +448,7 @@ export function QuoteForm({ className }: { className?: string }) {
               placeholder="Destination Port/City"
               {...register("deliveryLocation")}
               className={cn(
-                "w-full h-[38px] sm:h-[40px] px-3.5 rounded-[10px] border border-[#E2E8F0] bg-[#F8FAFC] text-navy-900 text-[13px] placeholder:text-slate-400 transition-all",
+                "w-full h-[38px] sm:h-[40px] px-3.5 rounded-[10px] border border-[#E2E8F0] bg-[#F8FAFC] text-navy-900 text-[13px] placeholder:text-slate-400 transition-[background-color,border-color,box-shadow] duration-150",
                 "focus:bg-white focus:border-ocean-600 focus:outline-none focus:ring-2 focus:ring-ocean-600/20",
                 errors.deliveryLocation && "border-red-500 focus:border-red-500 focus:ring-red-500/20"
               )}

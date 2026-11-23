@@ -2,6 +2,8 @@ import * as React from "react";
 import Image from "next/image";
 import { Star } from "lucide-react";
 import { Eyebrow } from "@/components/ui/eyebrow";
+import { Reveal } from "@/components/motion/reveal";
+import { PausableMarquee } from "@/components/motion/pausable-marquee";
 import { cn } from "@/lib/utils";
 
 interface ReviewItem {
@@ -60,11 +62,11 @@ export function Testimonials() {
     <div
       key={key}
       className={cn(
-        "group relative bg-[#F2F6FB] rounded-[26px] sm:rounded-[30px] p-2.5 sm:p-3 flex flex-col justify-between overflow-hidden shrink-0 select-none",
+        "group relative bg-[#F2F6FB] rounded-[26px] sm:rounded-[30px] p-2.5 sm:p-3 flex flex-col justify-between overflow-hidden shrink-0",
         "w-[340px] sm:w-[410px] lg:w-[450px]",
         "border-2 border-slate-200/80 shadow-[0_4px_24px_rgba(11,31,58,0.05)]",
-        "hover:border-orange-500 hover:shadow-[0_22px_48px_rgba(11,31,58,0.12),0_6px_20px_rgba(232,89,12,0.08)] hover:-translate-y-2",
-        "transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] min-h-[360px] sm:min-h-[380px]"
+        "hover:border-orange-500 hover:shadow-[0_22px_48px_rgba(11,31,58,0.12),0_6px_20px_rgba(232,89,12,0.08)] motion-safe:hover:-translate-y-2",
+        "transition-[border-color,box-shadow,transform] duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] min-h-[360px] sm:min-h-[380px]"
       )}
     >
       {/* Top White Speech Bubble */}
@@ -108,7 +110,7 @@ export function Testimonials() {
       <div className="relative flex items-end justify-between min-h-[64px] sm:min-h-[72px]">
         {/* Author Info Docked in the Left Cutout Shelf */}
         <div className="flex items-center gap-3.5 pl-2.5 sm:pl-3 pr-2 py-3 min-w-0 flex-1">
-          <div className="relative w-11 h-11 sm:w-12 sm:h-12 rounded-full overflow-hidden bg-navy-900 text-white flex items-center justify-center font-sans font-bold text-[13px] shrink-0 border-2 border-white shadow-sm ring-2 ring-slate-200/80 group-hover:ring-orange-300 transition-all duration-300">
+          <div className="relative w-11 h-11 sm:w-12 sm:h-12 rounded-full overflow-hidden bg-navy-900 text-white flex items-center justify-center font-sans font-bold text-[13px] shrink-0 border-2 border-white shadow-sm ring-2 ring-slate-200/80 group-hover:ring-orange-300 transition-[box-shadow] duration-300">
             <Image
               src={rev.avatar}
               alt={rev.name}
@@ -139,17 +141,17 @@ export function Testimonials() {
           </div>
 
           {/* Subtle brand trust pill inside right tab */}
-          <span className="w-2 h-2 rounded-full bg-orange-500/80 group-hover:bg-orange-500 group-hover:scale-125 transition-all duration-300 shadow-sm" />
+          <span className="w-2 h-2 rounded-full bg-orange-500/80 group-hover:bg-orange-500 motion-safe:group-hover:scale-125 transition-[background-color,transform] duration-300 shadow-sm" />
         </div>
       </div>
     </div>
   );
 
   return (
-    <section className="py-14 sm:py-18 lg:py-24 bg-white overflow-hidden border-b border-line select-none">
+    <section className="py-14 sm:py-18 lg:py-24 bg-white overflow-hidden border-b border-line">
       <div className="max-w-[1280px] xl:max-w-[1360px] mx-auto px-5 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="max-w-[640px] mb-10 sm:mb-12 lg:mb-14">
+        <Reveal className="max-w-[640px] mb-10 sm:mb-12 lg:mb-14">
           <Eyebrow>Client reviews</Eyebrow>
           <h2 className="font-display font-bold text-[clamp(26px,3.2vw,38px)] leading-[1.18] tracking-[-0.015em] text-navy-900 mt-2.5 [text-wrap:balance]">
             What our <span className="text-orange-500">customers say.</span>
@@ -158,11 +160,11 @@ export function Testimonials() {
             Real feedback from procurement managers and enterprise shippers who
             rely on us for time-critical freight movements.
           </p>
-        </div>
+        </Reveal>
       </div>
 
       {/* Infinite Scrolling Marquee Track with Edge Gradients */}
-      <div className="relative w-full overflow-hidden marquee-container py-3">
+      <div className="relative w-full">
         {/* Left & Right Smooth Edge Fade Masks */}
         <div
           className="pointer-events-none absolute inset-y-0 left-0 w-12 sm:w-24 lg:w-36 bg-gradient-to-r from-white via-white/80 to-transparent z-20"
@@ -173,21 +175,17 @@ export function Testimonials() {
           aria-hidden="true"
         />
 
-        {/* Scrolling Cards Flex Row (Pauses on Hover for Easy Reading) */}
-        <div
-          className="animate-marquee flex items-stretch hover:[animation-play-state:paused]"
-          style={{ animationDuration: "36s" }}
+        <PausableMarquee
+          label="Client testimonials"
+          speedSeconds={36}
+          tone="dark"
+          gap={24}
+          groupClassName="items-stretch"
+          className="py-3 pt-12"
+          controlClassName="top-3 right-4 translate-y-0"
         >
-          {/* First Track */}
-          <div className="flex items-stretch gap-6 sm:gap-8 pr-6 sm:pr-8 shrink-0">
-            {reviews.map((rev, idx) => renderCard(rev, `track-1-${idx}`))}
-          </div>
-
-          {/* Second Duplicate Track for Seamless Infinite Loop */}
-          <div className="flex items-stretch gap-6 sm:gap-8 pr-6 sm:pr-8 shrink-0" aria-hidden="true">
-            {reviews.map((rev, idx) => renderCard(rev, `track-2-${idx}`))}
-          </div>
-        </div>
+          {reviews.map((rev, idx) => renderCard(rev, `review-${idx}`))}
+        </PausableMarquee>
       </div>
     </section>
   );

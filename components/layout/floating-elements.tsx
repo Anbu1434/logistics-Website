@@ -21,7 +21,7 @@ export function FloatingElements() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Chat with logistics dispatch on WhatsApp"
-        className="fixed bottom-[74px] min-[390px]:bottom-[78px] md:bottom-8 right-3.5 min-[390px]:right-4 md:right-8 z-40 w-12 h-12 min-[390px]:w-[48px] min-[390px]:h-[48px] md:w-14 md:h-14 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-lift hover:scale-105 active:scale-95 transition-transform duration-200 focus-visible:outline-2 focus-visible:outline-ocean-600 focus-visible:outline-offset-2"
+        className="floating-whatsapp fixed bottom-[74px] min-[390px]:bottom-[78px] md:bottom-8 right-3.5 min-[390px]:right-4 md:right-8 z-40 w-12 h-12 min-[390px]:w-[48px] min-[390px]:h-[48px] md:w-14 md:h-14 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-lift motion-safe:hover:scale-105 motion-safe:active:scale-95 motion-safe:transition-transform motion-safe:duration-200 focus-visible:outline-2 focus-visible:outline-ocean-600 focus-visible:outline-offset-2"
       >
         <svg
           viewBox="0 0 24 24"
@@ -38,7 +38,7 @@ export function FloatingElements() {
       {/* Sticky Bottom CTA Bar: Mobile only (md:hidden), white background, 12px gap, non-wrapping labels */}
       <aside
         aria-label="Quick Actions"
-        className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-line shadow-[0_-2px_12px_rgba(11,31,58,0.06)] px-3.5 min-[390px]:px-4 pt-2.5"
+        className="floating-bar md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-line shadow-[0_-2px_12px_rgba(11,31,58,0.06)] px-3.5 min-[390px]:px-4 pt-2.5"
         style={{ paddingBottom: "max(10px, env(safe-area-inset-bottom))" }}
       >
         <div className="flex items-center gap-3 max-w-[480px] mx-auto w-full">

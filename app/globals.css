@@ -14,6 +14,15 @@
   --color-line: #E2E8F0;
   --color-success: #16A34A;
   --color-white: #FFFFFF;
+
+  /* Motion tokens, mirrored in lib/motion.ts */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-instant: 100ms;
+  --duration-fast: 150ms;
+  --duration-base: 240ms;
+  --duration-reveal: 400ms;
+  --duration-image: 800ms;
 }
 
 @layer base {
@@ -36,7 +45,6 @@
     text-wrap: balance;
   }
 
-  /* Focus ring style according to section 5 */
   :focus-visible {
     outline: 2px solid #1F5F9E;
     outline-offset: 2px;
@@ -53,6 +61,291 @@
   }
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Scroll reveal                                                       */
+/* ------------------------------------------------------------------ */
+
+[data-reveal-ready="true"] {
+  opacity: 0;
+  translate: var(--reveal-x, 0px) var(--reveal-y, 16px);
+  transition:
+    opacity var(--reveal-duration, 400ms) var(--ease-out)
+      var(--reveal-delay, 0ms),
+    translate var(--reveal-duration, 400ms) var(--ease-out)
+      var(--reveal-delay, 0ms);
+  will-change: opacity, translate;
+}
+
+[data-reveal-ready="true"].is-visible {
+  opacity: 1;
+  translate: 0 0;
+  will-change: auto;
+}
+
+/* ------------------------------------------------------------------ */
+/* Image reveal                                                        */
+/* ------------------------------------------------------------------ */
+
+.image-reveal {
+  clip-path: inset(0 0 0 0);
+  transition: clip-path var(--image-duration, 800ms) var(--ease-out)
+    var(--image-delay, 0ms);
+}
+
+.image-reveal[data-image-ready="true"][data-visible="false"] {
+  clip-path: var(--clip-hidden, inset(100% 0 0 0));
+}
+
+.image-reveal > :first-child {
+  scale: 1;
+  transition: scale var(--image-duration, 800ms) var(--ease-out)
+    var(--image-delay, 0ms);
+}
+
+.image-reveal[data-visible="false"] > :first-child {
+  scale: 1.04;
+}
+
+/* ------------------------------------------------------------------ */
+/* Entrance choreography                                               */
+/* ------------------------------------------------------------------ */
+
+@keyframes motion-rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--rise-distance, 16px));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes motion-mask-rise {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes motion-fade-down {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes motion-page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes motion-video-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.motion-rise {
+  animation: motion-rise var(--rise-duration, 500ms) var(--ease-out) both;
+  animation-delay: var(--motion-delay, 0ms);
+}
+
+.motion-mask {
+  overflow: hidden;
+}
+
+.motion-mask > * {
+  animation: motion-mask-rise var(--mask-duration, 600ms) var(--ease-out) both;
+  animation-delay: var(--motion-delay, 0ms);
+}
+
+.header-enter {
+  animation: motion-fade-down 300ms var(--ease-out) both;
+}
+
+.page-enter {
+  animation: motion-page-enter var(--duration-base) var(--ease-out) both;
+}
+
+@keyframes menu-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.menu-enter {
+  animation: menu-enter 150ms var(--ease-out) both;
+  transform-origin: top;
+}
+
+@keyframes success-enter {
+  from {
+    opacity: 0;
+    scale: 0.98;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+.success-enter {
+  animation: success-enter 250ms var(--ease-out) both;
+}
+
+.hero-video {
+  animation: motion-video-in 700ms var(--ease-out) both;
+}
+
+/* ------------------------------------------------------------------ */
+/* Floating actions                                                    */
+/* ------------------------------------------------------------------ */
+
+@keyframes floating-pop {
+  from {
+    opacity: 0;
+    scale: 0.9;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@keyframes floating-slide-up {
+  from {
+    translate: 0 100%;
+  }
+  to {
+    translate: 0 0;
+  }
+}
+
+.floating-whatsapp {
+  animation: floating-pop 300ms var(--ease-out) 800ms both;
+  transition: opacity 150ms linear, translate 200ms var(--ease-out);
+}
+
+.floating-bar {
+  animation: floating-slide-up 300ms var(--ease-out) 200ms both;
+  transition: opacity 150ms linear, translate 200ms var(--ease-out);
+}
+
+body:has([role="dialog"][aria-modal="true"]) .floating-whatsapp {
+  animation: none;
+  opacity: 0;
+  pointer-events: none;
+}
+
+body:has([role="dialog"][aria-modal="true"]) .floating-bar {
+  animation: none;
+  translate: 0 100%;
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------------ */
+/* Button Ripple                                                       */
+/* ------------------------------------------------------------------ */
+
+@keyframes ripple {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0.4;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+
+.animate-ripple {
+  animation: ripple 400ms var(--ease-out) forwards;
+}
+
+/* ------------------------------------------------------------------ */
+/* Button Shimmer (hover)                                              */
+/* ------------------------------------------------------------------ */
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.button-shimmer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.15),
+    transparent
+  );
+  transform: translateX(-100%);
+  pointer-events: none;
+}
+
+.group:hover .button-shimmer::before {
+  animation: shimmer 600ms var(--ease-out) forwards;
+}
+
+/* ------------------------------------------------------------------ */
+/* Subtle Pulse (for focus rings)                                      */
+/* ------------------------------------------------------------------ */
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
+
+/* ------------------------------------------------------------------ */
+/* Marquee                                                             */
+/* ------------------------------------------------------------------ */
+
 @keyframes marquee {
   0% {
     transform: translateX(0%);
@@ -62,27 +355,91 @@
   }
 }
 
-.animate-marquee {
-  display: flex;
-  width: max-content;
-  animation: marquee 30s linear infinite;
-}
-
-.marquee-container:hover .animate-marquee,
-.animate-marquee:hover {
+.marquee-track {
+  animation: marquee var(--marquee-duration, 30s) linear infinite;
   animation-play-state: paused;
 }
 
+.marquee-viewport[data-marquee-active="true"] .marquee-track {
+  animation-play-state: running;
+}
+
+.marquee-viewport[data-marquee-paused="true"] .marquee-track,
+.marquee-viewport:hover .marquee-track,
+.marquee-viewport:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+
+.marquee-viewport:focus-within .marquee-control {
+  opacity: 1;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  *, ::before, ::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+  .marquee-viewport {
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
   }
-  .animate-marquee {
+
+  .marquee-track {
     animation: none !important;
     transform: none !important;
-    overflow-x: auto;
+  }
+
+  .marquee-group[aria-hidden="true"] {
+    display: none !important;
+  }
+
+  .marquee-group {
+    padding-right: 0 !important;
+    scroll-snap-align: start;
+  }
+
+  .marquee-control {
+    display: none !important;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Reduced motion                                                      */
+/* ------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal-ready="true"] {
+    opacity: 1 !important;
+    translate: none !important;
+    transition: opacity 150ms linear !important;
+    will-change: auto;
+  }
+
+  .image-reveal,
+  .image-reveal > :first-child {
+    clip-path: none !important;
+    scale: 1 !important;
+    transition: none !important;
+  }
+
+  .motion-rise,
+  .motion-mask > *,
+  .header-enter,
+  .page-enter,
+  .hero-video,
+  .menu-enter,
+  .success-enter,
+  .floating-whatsapp,
+  .floating-bar {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .motion-rise,
+  .header-enter,
+  .page-enter {
+    animation-delay: 0ms !important;
+  }
+
+  .hero-media video {
+    display: none !important;
   }
 }

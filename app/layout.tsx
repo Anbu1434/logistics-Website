@@ -49,6 +49,9 @@ export default function RootLayout({
       className={`${sora.variable} ${inter.variable} ${jetbrainsMono.variable}`}
     >
       <body className="min-h-screen bg-white font-sans text-slate-600 antialiased selection:bg-orange-500 selection:text-white flex flex-col justify-between pb-[88px] md:pb-0">
+        <noscript>
+          <style>{`[data-reveal-ready="true"]{opacity:1!important;translate:none!important}[data-image-ready="true"][data-visible="false"]{clip-path:none!important}[data-visible="false"]>*{scale:1!important}`}</style>
+        </noscript>
         <QuoteModalProvider>
           <TrackingModalProvider>
             <Header />

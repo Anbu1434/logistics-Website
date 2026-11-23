@@ -11,7 +11,7 @@ const servicesList = [
 
 export function ServicesMarquee() {
   return (
-    <section className="w-full bg-navy-900 select-none" aria-label="Services Capabilities Marquee">
+    <section className="w-full bg-navy-900" aria-label="Services Capabilities Marquee">
       <Marquee
         items={servicesList}
         variant="navy"

@@ -29,7 +29,7 @@ export function TrackingModalProvider({
   children: React.ReactNode;
 }) {
   const [isOpen, setIsOpen] = React.useState(false);
-  const [trackingId, setTrackingId] = React.useState("LG-2026-004981");
+  const [trackingId, setTrackingId] = React.useState("");
 
   const openTrackingModal = React.useCallback((id?: string) => {
     if (id && id.trim()) {

@@ -1,4 +1,7 @@
+"use client";
+
 import * as React from "react";
+import { CountUp } from "@/components/motion/count-up";
 import { cn } from "@/lib/utils";
 
 export interface StatBlockProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -9,6 +12,8 @@ export interface StatBlockProps extends React.HTMLAttributes<HTMLDivElement> {
   hasDivider?: boolean;
 }
 
+const COUNTABLE = /^(\d+)(K\+?|M\+?|B\+?|%|\+|)$/i;
+
 export function StatBlock({
   value,
   label,
@@ -18,6 +23,10 @@ export function StatBlock({
   className,
   ...props
 }: StatBlockProps) {
+  const match = value.match(COUNTABLE);
+  const numericValue = match ? Number(match[1]) : null;
+  const suffix = match ? match[2] : "";
+
   return (
     <div
       className={cn(
@@ -29,11 +38,15 @@ export function StatBlock({
     >
       <div
         className={cn(
-          "font-display font-bold text-[40px] md:text-[56px] leading-[1.05] tracking-tight",
+          "font-display font-bold text-[40px] md:text-[56px] leading-[1.05] tracking-tight tabular-nums",
           dark ? "text-white" : "text-ink"
         )}
       >
-        {value}
+        {numericValue !== null ? (
+          <CountUp value={numericValue} suffix={suffix} />
+        ) : (
+          value
+        )}
       </div>
 
       <div
@@ -58,4 +71,3 @@ export function StatBlock({
     </div>
   );
 }
-

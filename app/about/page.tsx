@@ -6,6 +6,8 @@ import { PageHeader } from "@/components/layout/page-header";
 import { StatBlock } from "@/components/ui/stat-block";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Reveal } from "@/components/motion/reveal";
+import { ImageReveal } from "@/components/motion/image-reveal";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -84,50 +86,60 @@ export default function AboutPage() {
         <div className="max-w-[1320px] mx-auto px-5 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
             {/* Left: Port Photography */}
-            <div className="lg:col-span-6 relative aspect-[4/3] rounded-[20px] overflow-hidden border border-line shadow-soft">
-              <Image
-                src="/images/about-port.webp"
-                alt="Container port operations"
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
+            <ImageReveal
+              direction="left"
+              duration={800}
+              className="lg:col-span-6 relative aspect-[4/3] rounded-[20px] overflow-hidden border border-line shadow-soft"
+            >
+              <div className="relative h-full w-full">
+                <Image
+                  src="/images/about-port.webp"
+                  alt="Container port operations"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                />
+              </div>
               <div
                 className="absolute inset-0 bg-gradient-to-t from-navy-900/60 via-transparent to-transparent"
                 aria-hidden="true"
               />
-              <div className="absolute bottom-6 left-6 bg-navy-900/90 text-white backdrop-blur-md px-5 py-3 rounded-xl border border-navy-700">
+              <Reveal
+                delay={250}
+                y={8}
+                className="absolute bottom-6 left-6 bg-navy-900/90 text-white px-5 py-3 rounded-xl border border-navy-700"
+              >
                 <span className="font-display font-bold text-xl block">98% On-Time</span>
                 <span className="text-xs text-slate-300">Verified Maritime & Air Corridors</span>
-              </div>
-            </div>
+              </Reveal>
+            </ImageReveal>
 
             {/* Right: Narrative */}
             <div className="lg:col-span-6 flex flex-col gap-6">
-              <span className="text-orange-500 font-bold uppercase tracking-wider text-xs">
+              <Reveal as="span" y={8} className="text-orange-500 font-bold uppercase tracking-wider text-xs">
                 Our Mission & Story
-              </span>
-              <h2 className="font-display font-bold text-[28px] sm:text-[36px] text-ink leading-tight">
+              </Reveal>
+              <Reveal as="h2" delay={60} y={16} className="font-display font-bold text-[28px] sm:text-[36px] text-ink leading-tight">
                 Built to eliminate delays, opacity, and supply chain fragmentation.
-              </h2>
-              <p className="font-sans text-[16px] text-slate-600 leading-relaxed">
+              </Reveal>
+              <Reveal as="p" delay={120} y={12} className="font-sans text-[16px] text-slate-600 leading-relaxed">
                 Founded on the principle that precision scheduling shouldn&apos;t be an exception in global freight,
                 we engineered a modern logistics network integrating live satellite telemetry with seasoned terminal coordinators.
-              </p>
-              <p className="font-sans text-[16px] text-slate-600 leading-relaxed">
+              </Reveal>
+              <Reveal as="p" delay={160} y={12} className="font-sans text-[16px] text-slate-600 leading-relaxed">
                 Whether routing urgent air freight across transatlantic flight corridors or managing full container loads through busy maritime straits, our dedicated team ensures regulatory compliance, clear visibility, and zero guesswork.
-              </p>
+              </Reveal>
 
-              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-line">
+              <Reveal delay={220} y={12} className="grid grid-cols-2 gap-4 pt-4 border-t border-line">
                 <div className="flex items-center gap-3">
-                  <ShieldCheck className="w-5 h-5 text-orange-500 shrink-0" />
+                  <ShieldCheck className="w-5 h-5 text-orange-500 shrink-0" aria-hidden="true" />
                   <span className="text-sm font-semibold text-ink">Zero-Loss Cargo Protocols</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Clock className="w-5 h-5 text-orange-500 shrink-0" />
+                  <Clock className="w-5 h-5 text-orange-500 shrink-0" aria-hidden="true" />
                   <span className="text-sm font-semibold text-ink">24/7 Global Dispatch</span>
                 </div>
-              </div>
+              </Reveal>
             </div>
           </div>
         </div>
@@ -137,10 +149,20 @@ export default function AboutPage() {
       <section className="py-12 bg-sky-50 border-b border-line">
         <div className="max-w-[1320px] mx-auto px-5 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <StatBlock value="29K+" label="Specialists & Crew" hasDivider />
-            <StatBlock value="150K" label="Tons Moved Annually" hasDivider />
-            <StatBlock value="139K+" label="Active Enterprise Shippers" hasDivider />
-            <StatBlock value="50+" label="Global Hub Cities" />
+            {[
+              { value: "29K+", label: "Specialists & Crew" },
+              { value: "150K", label: "Tons Moved Annually" },
+              { value: "139K+", label: "Active Enterprise Shippers" },
+              { value: "50+", label: "Global Hub Cities" },
+            ].map((stat, index) => (
+              <Reveal key={stat.label} delay={index * 60} y={12}>
+                <StatBlock
+                  value={stat.value}
+                  label={stat.label}
+                  hasDivider={index < 3}
+                />
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>
@@ -149,29 +171,31 @@ export default function AboutPage() {
       <section className="py-16 sm:py-24 border-b border-line bg-white">
         <div className="max-w-[1320px] mx-auto px-5 sm:px-6 lg:px-8">
           <div className="max-w-[640px] mb-12 sm:mb-16">
-            <span className="text-orange-500 font-bold uppercase tracking-wider text-xs">
+            <Reveal as="span" y={8} className="block text-orange-500 font-bold uppercase tracking-wider text-xs">
               Operational Growth
-            </span>
-            <h2 className="font-display font-bold text-[28px] sm:text-[36px] text-ink mt-2">
+            </Reveal>
+            <Reveal as="h2" delay={60} y={16} className="font-display font-bold text-[28px] sm:text-[36px] text-ink mt-2">
               A decade of continuous innovation.
-            </h2>
+            </Reveal>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {milestones.map((item) => (
-              <Card key={item.year} className="p-6 bg-white border border-line shadow-soft flex flex-col justify-between">
-                <div>
-                  <span className="font-display font-bold text-3xl text-orange-500 block mb-2">
-                    {item.year}
-                  </span>
-                  <h3 className="font-display font-semibold text-lg text-ink mb-2">
-                    {item.title}
-                  </h3>
-                  <p className="font-sans text-sm text-slate-600 leading-relaxed">
-                    {item.description}
-                  </p>
-                </div>
-              </Card>
+            {milestones.map((item, index) => (
+              <Reveal key={item.year} delay={index * 70} y={16} className="h-full">
+                <Card className="h-full p-6 bg-white border border-line shadow-soft flex flex-col justify-between">
+                  <div>
+                    <span className="font-display font-bold text-3xl text-orange-500 block mb-2">
+                      {item.year}
+                    </span>
+                    <h3 className="font-display font-semibold text-lg text-ink mb-2">
+                      {item.title}
+                    </h3>
+                    <p className="font-sans text-sm text-slate-600 leading-relaxed">
+                      {item.description}
+                    </p>
+                  </div>
+                </Card>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -181,37 +205,40 @@ export default function AboutPage() {
       <section className="py-16 sm:py-24 border-b border-line bg-sky-50">
         <div className="max-w-[1320px] mx-auto px-5 sm:px-6 lg:px-8">
           <div className="max-w-[640px] mb-12 sm:mb-16">
-            <span className="text-orange-500 font-bold uppercase tracking-wider text-xs">
+            <Reveal as="span" y={8} className="block text-orange-500 font-bold uppercase tracking-wider text-xs">
               Leadership
-            </span>
-            <h2 className="font-display font-bold text-[28px] sm:text-[36px] text-ink mt-2">
+            </Reveal>
+            <Reveal as="h2" delay={60} y={16} className="font-display font-bold text-[28px] sm:text-[36px] text-ink mt-2">
               Guided by veteran logistics leaders.
-            </h2>
+            </Reveal>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-            {leadership.map((person) => (
-              <Card key={person.name} className="p-6 sm:p-7 bg-white border border-line shadow-soft flex flex-col justify-between">
-                <div>
-                  <div className="relative w-20 h-20 rounded-full overflow-hidden mb-5 border-2 border-orange-500/20">
-                    <Image
-                      src={person.image}
-                      alt={person.name}
-                      fill
-                      className="object-cover"
-                    />
+            {leadership.map((person, index) => (
+              <Reveal key={person.name} delay={index * 80} y={16} className="h-full">
+                <Card className="h-full p-6 sm:p-7 bg-white border border-line shadow-soft flex flex-col justify-between">
+                  <div>
+                    <div className="relative w-20 h-20 rounded-full overflow-hidden mb-5 border-2 border-orange-500/20">
+                      <Image
+                        src={person.image}
+                        alt={person.name}
+                        fill
+                        sizes="80px"
+                        className="object-cover"
+                      />
+                    </div>
+                    <h3 className="font-display font-bold text-xl text-ink">
+                      {person.name}
+                    </h3>
+                    <span className="text-xs font-semibold text-orange-600 block mb-3">
+                      {person.role}
+                    </span>
+                    <p className="font-sans text-sm text-slate-600 leading-relaxed">
+                      {person.bio}
+                    </p>
                   </div>
-                  <h3 className="font-display font-bold text-xl text-ink">
-                    {person.name}
-                  </h3>
-                  <span className="text-xs font-semibold text-orange-600 block mb-3">
-                    {person.role}
-                  </span>
-                  <p className="font-sans text-sm text-slate-600 leading-relaxed">
-                    {person.bio}
-                  </p>
-                </div>
-              </Card>
+                </Card>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -220,37 +247,36 @@ export default function AboutPage() {
       {/* Certifications */}
       <section className="py-16 sm:py-24 bg-white">
         <div className="max-w-[1320px] mx-auto px-5 sm:px-6 lg:px-8 text-center">
-          <span className="text-orange-500 font-bold uppercase tracking-wider text-xs">
+          <Reveal as="span" y={8} className="block text-orange-500 font-bold uppercase tracking-wider text-xs">
             Compliance & Standards
-          </span>
-          <h2 className="font-display font-bold text-[28px] sm:text-[36px] text-ink mt-2 mb-10">
+          </Reveal>
+          <Reveal as="h2" delay={60} y={16} className="font-display font-bold text-[28px] sm:text-[36px] text-ink mt-2 mb-10">
             Certified for international trade compliance.
-          </h2>
+          </Reveal>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-            {certifications.map((cert) => (
-              <div
-                key={cert.title}
-                className="p-5 rounded-xl border border-line bg-sky-50 flex flex-col items-center text-center justify-center gap-1"
-              >
-                <Award className="w-6 h-6 text-orange-500 mb-1" />
-                <span className="font-display font-bold text-ink text-base">
-                  {cert.title}
-                </span>
-                <span className="text-xs text-slate-500">
-                  {cert.subtitle}
-                </span>
-              </div>
+            {certifications.map((cert, index) => (
+              <Reveal key={cert.title} delay={index * 60} y={12}>
+                <div className="h-full p-5 rounded-xl border border-line bg-sky-50 flex flex-col items-center text-center justify-center gap-1">
+                  <Award className="w-6 h-6 text-orange-500 mb-1" aria-hidden="true" />
+                  <span className="font-display font-bold text-ink text-base">
+                    {cert.title}
+                  </span>
+                  <span className="text-xs text-slate-500">
+                    {cert.subtitle}
+                  </span>
+                </div>
+              </Reveal>
             ))}
           </div>
 
-          <div className="mt-14 inline-block">
+          <Reveal delay={200} y={12} className="mt-14 inline-block">
             <Link href="/?quote=open">
               <Button variant="primary" className="h-[48px] px-8 text-sm font-semibold">
                 Get a Quote for Your Freight
               </Button>
             </Link>
-          </div>
+          </Reveal>
         </div>
       </section>
     </main>

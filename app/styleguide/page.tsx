@@ -14,6 +14,7 @@ import {
   Badge,
   Marquee,
 } from "@/components/ui";
+import { Reveal } from "@/components/motion/reveal";
 
 export const metadata: Metadata = {
   title: "Design System & Styleguide",
@@ -150,7 +151,8 @@ export default function StyleguidePage() {
         {/* ========================================================= */}
         {/* SECTION 1: COLOR TOKENS */}
         {/* ========================================================= */}
-        <section id="colors" className="flex flex-col gap-8">
+        <Reveal y={16}>
+          <section id="colors" className="flex flex-col gap-8">
           <SectionHeading
             eyebrow="Section 4.1"
             title="Design Tokens: Color Palette"
@@ -209,11 +211,13 @@ export default function StyleguidePage() {
             </div>
           </div>
         </section>
+        </Reveal>
 
         {/* ========================================================= */}
         {/* SECTION 2: TYPOGRAPHY HIERARCHY */}
         {/* ========================================================= */}
-        <section id="typography" className="flex flex-col gap-8">
+        <Reveal y={16}>
+          <section id="typography" className="flex flex-col gap-8">
           <SectionHeading
             eyebrow="Section 4.3"
             title="Typography Hierarchy & Scales"
@@ -327,11 +331,13 @@ export default function StyleguidePage() {
             </div>
           </div>
         </section>
+        </Reveal>
 
         {/* ========================================================= */}
         {/* SECTION 3: BUTTON VARIANTS */}
         {/* ========================================================= */}
-        <section id="buttons" className="flex flex-col gap-8">
+        <Reveal y={16}>
+          <section id="buttons" className="flex flex-col gap-8">
           <SectionHeading
             eyebrow="Section 5"
             title="Button Variants & Interactive States"
@@ -410,11 +416,13 @@ export default function StyleguidePage() {
             </div>
           </div>
         </section>
+        </Reveal>
 
         {/* ========================================================= */}
         {/* SECTION 4: FORM INPUT STATES */}
         {/* ========================================================= */}
-        <section id="inputs" className="flex flex-col gap-8">
+        <Reveal y={16}>
+          <section id="inputs" className="flex flex-col gap-8">
           <SectionHeading
             eyebrow="Section 5"
             title="Form Input States & Validation"
@@ -471,11 +479,13 @@ export default function StyleguidePage() {
             </div>
           </div>
         </section>
+        </Reveal>
 
         {/* ========================================================= */}
         {/* SECTION 5: CARD PRIMITIVES (SERVICE CARDS) */}
         {/* ========================================================= */}
-        <section id="cards" className="flex flex-col gap-8">
+        <Reveal y={16}>
+          <section id="cards" className="flex flex-col gap-8">
           <SectionHeading
             eyebrow="Section 5"
             title="Service Cards with Image & Navy Gradient Overlay"
@@ -536,11 +546,13 @@ export default function StyleguidePage() {
             </Card>
           </div>
         </section>
+        </Reveal>
 
         {/* ========================================================= */}
         {/* SECTION 6: BADGE PRIMITIVES */}
         {/* ========================================================= */}
-        <section id="badges" className="flex flex-col gap-8">
+        <Reveal y={16}>
+          <section id="badges" className="flex flex-col gap-8">
           <SectionHeading
             eyebrow="Section 5"
             title="Badge Tokens & Status Variants"
@@ -575,11 +587,13 @@ export default function StyleguidePage() {
             </div>
           </div>
         </section>
+        </Reveal>
 
         {/* ========================================================= */}
         {/* SECTION 7: STAT BLOCK PRIMITIVES */}
         {/* ========================================================= */}
-        <section id="stats" className="flex flex-col gap-8">
+        <Reveal y={16}>
+          <section id="stats" className="flex flex-col gap-8">
           <SectionHeading
             eyebrow="Section 5"
             title="StatBlock Metric Rows"
@@ -649,11 +663,13 @@ export default function StyleguidePage() {
             </div>
           </div>
         </section>
+        </Reveal>
 
         {/* ========================================================= */}
         {/* SECTION 8: STEP ITEM (PROCESS STEPS) */}
         {/* ========================================================= */}
-        <section id="steps" className="flex flex-col gap-8">
+        <Reveal y={16}>
+          <section id="steps" className="flex flex-col gap-8">
           <SectionHeading
             eyebrow="Section 5"
             title="StepItem: Numbered Process Sequence"
@@ -725,11 +741,13 @@ export default function StyleguidePage() {
             </div>
           </div>
         </section>
+        </Reveal>
 
         {/* ========================================================= */}
         {/* SECTION 9: MARQUEE TICKER BANDS */}
         {/* ========================================================= */}
-        <section id="marquees" className="flex flex-col gap-8">
+        <Reveal y={16}>
+          <section id="marquees" className="flex flex-col gap-8">
           <SectionHeading
             eyebrow="Section 5"
             title="Marquee Ticker Bands"
@@ -763,11 +781,13 @@ export default function StyleguidePage() {
             </div>
           </div>
         </section>
+        </Reveal>
 
         {/* ========================================================= */}
         {/* SECTION 10: SECTION HEADING PRIMITIVE DEMO */}
         {/* ========================================================= */}
-        <section id="headings" className="flex flex-col gap-8">
+        <Reveal y={16}>
+          <section id="headings" className="flex flex-col gap-8">
           <SectionHeading
             eyebrow="Section 5"
             title="SectionHeading Component Variations"
@@ -796,6 +816,7 @@ export default function StyleguidePage() {
             </div>
           </div>
         </section>
+        </Reveal>
       </main>
 
       {/* Footer Note */}

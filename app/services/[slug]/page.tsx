@@ -13,6 +13,9 @@ import {
 import { PageHeader } from "@/components/layout/page-header";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Reveal } from "@/components/motion/reveal";
+import { ImageReveal } from "@/components/motion/image-reveal";
+import { Accordion } from "@/components/motion/accordion";
 
 interface ServiceData {
   title: string;
@@ -385,22 +388,19 @@ export default function ServiceDetailPage({
       <section className="py-14 border-b border-line bg-sky-50">
         <div className="max-w-[1320px] mx-auto px-5 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="p-4 bg-white rounded-xl border border-line shadow-soft">
-              <span className="text-xs text-slate-500 block mb-1">Transit Speed</span>
-              <span className="font-display font-bold text-lg text-ink block">{service.transitSpeed}</span>
-            </div>
-            <div className="p-4 bg-white rounded-xl border border-line shadow-soft">
-              <span className="text-xs text-slate-500 block mb-1">Telemetry Monitoring</span>
-              <span className="font-display font-bold text-lg text-ink block">{service.telemetry}</span>
-            </div>
-            <div className="p-4 bg-white rounded-xl border border-line shadow-soft">
-              <span className="text-xs text-slate-500 block mb-1">Equipment Capacity</span>
-              <span className="font-display font-bold text-lg text-ink block">{service.capacity}</span>
-            </div>
-            <div className="p-4 bg-white rounded-xl border border-line shadow-soft">
-              <span className="text-xs text-slate-500 block mb-1">Global Network</span>
-              <span className="font-display font-bold text-lg text-ink block">{service.coverage}</span>
-            </div>
+            {[
+              { label: "Transit Speed", value: service.transitSpeed },
+              { label: "Telemetry Monitoring", value: service.telemetry },
+              { label: "Equipment Capacity", value: service.capacity },
+              { label: "Global Network", value: service.coverage },
+            ].map((stat, index) => (
+              <Reveal key={stat.label} delay={index * 60} y={12}>
+                <div className="h-full p-4 bg-white rounded-xl border border-line shadow-soft">
+                  <span className="text-xs text-slate-500 block mb-1">{stat.label}</span>
+                  <span className="font-display font-bold text-lg text-ink block">{stat.value}</span>
+                </div>
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>
@@ -409,34 +409,52 @@ export default function ServiceDetailPage({
       <section className="py-16 sm:py-24 border-b border-line bg-white">
         <div className="max-w-[1320px] mx-auto px-5 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-            <div className="lg:col-span-6 relative aspect-[4/3] rounded-[22px] overflow-hidden border border-line shadow-soft bg-navy-900">
-              <Image
-                src={service.image}
-                alt={service.title}
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                priority
-              />
-            </div>
+            <ImageReveal
+              direction="left"
+              duration={800}
+              className="lg:col-span-6 relative aspect-[4/3] rounded-[22px] overflow-hidden border border-line shadow-soft bg-navy-900"
+            >
+              <div className="relative h-full w-full">
+                <Image
+                  src={service.image}
+                  alt={service.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  priority
+                />
+              </div>
+            </ImageReveal>
 
             <div className="lg:col-span-6 flex flex-col gap-6">
-              <div className="w-12 h-12 rounded-xl bg-sky-50 border border-line flex items-center justify-center text-orange-500">
-                <Icon className="w-6 h-6" />
-              </div>
-              <h2 className="font-display font-bold text-3xl sm:text-4xl text-ink leading-tight">
+              <Reveal y={12}>
+                <div className="w-12 h-12 rounded-xl bg-sky-50 border border-line flex items-center justify-center text-orange-500">
+                  <Icon className="w-6 h-6" aria-hidden="true" />
+                </div>
+              </Reveal>
+              <Reveal
+                as="h2"
+                delay={60}
+                y={16}
+                className="font-display font-bold text-3xl sm:text-4xl text-ink leading-tight"
+              >
                 Engineered for speed, compliance, and guaranteed reliability.
-              </h2>
-              <p className="font-sans text-base text-slate-600 leading-relaxed">
+              </Reveal>
+              <Reveal
+                as="p"
+                delay={120}
+                y={12}
+                className="font-sans text-base text-slate-600 leading-relaxed"
+              >
                 {service.description}
-              </p>
-              <div className="pt-2">
+              </Reveal>
+              <Reveal delay={180} y={12} className="pt-2">
                 <Link href={`/quote?service=${params.slug}`}>
                   <Button variant="primary" className="h-[48px] px-8 text-sm font-semibold">
                     Request a {service.title.split(" ")[0]} Quote
                   </Button>
                 </Link>
-              </div>
+              </Reveal>
             </div>
           </div>
         </div>
@@ -446,27 +464,29 @@ export default function ServiceDetailPage({
       <section className="py-16 sm:py-24 border-b border-line bg-sky-50">
         <div className="max-w-[1320px] mx-auto px-5 sm:px-6 lg:px-8">
           <div className="max-w-[640px] mb-12 sm:mb-16">
-            <span className="text-orange-500 font-bold uppercase tracking-wider text-xs">
+            <Reveal as="span" y={8} className="block text-orange-500 font-bold uppercase tracking-wider text-xs">
               Service Scope
-            </span>
-            <h2 className="font-display font-bold text-3xl text-ink mt-2">
+            </Reveal>
+            <Reveal as="h2" delay={60} y={16} className="font-display font-bold text-3xl text-ink mt-2">
               What is included in our {service.title}
-            </h2>
+            </Reveal>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {service.features.map((feat) => (
-              <Card key={feat.title} className="p-6 bg-white border border-line shadow-soft flex flex-col justify-between">
-                <div>
-                  <CheckCircle2 className="w-6 h-6 text-orange-500 mb-3" />
-                  <h3 className="font-display font-semibold text-lg text-ink mb-2">
-                    {feat.title}
-                  </h3>
-                  <p className="font-sans text-sm text-slate-600 leading-relaxed">
-                    {feat.desc}
-                  </p>
-                </div>
-              </Card>
+            {service.features.map((feat, index) => (
+              <Reveal key={feat.title} delay={index * 60} y={16} className="h-full">
+                <Card className="h-full p-6 bg-white border border-line shadow-soft flex flex-col justify-between">
+                  <div>
+                    <CheckCircle2 className="w-6 h-6 text-orange-500 mb-3" aria-hidden="true" />
+                    <h3 className="font-display font-semibold text-lg text-ink mb-2">
+                      {feat.title}
+                    </h3>
+                    <p className="font-sans text-sm text-slate-600 leading-relaxed">
+                      {feat.desc}
+                    </p>
+                  </div>
+                </Card>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -476,29 +496,31 @@ export default function ServiceDetailPage({
       <section className="py-16 sm:py-24 border-b border-line bg-white">
         <div className="max-w-[1320px] mx-auto px-5 sm:px-6 lg:px-8">
           <div className="max-w-[640px] mb-12 sm:mb-16">
-            <span className="text-orange-500 font-bold uppercase tracking-wider text-xs">
+            <Reveal as="span" y={8} className="block text-orange-500 font-bold uppercase tracking-wider text-xs">
               Operational Process
-            </span>
-            <h2 className="font-display font-bold text-3xl text-ink mt-2">
+            </Reveal>
+            <Reveal as="h2" delay={60} y={16} className="font-display font-bold text-3xl text-ink mt-2">
               How it works from request to delivery
-            </h2>
+            </Reveal>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {service.steps.map((st) => (
-              <div key={st.step} className="p-6 rounded-[20px] border border-line bg-sky-50 flex flex-col justify-between">
-                <div>
-                  <span className="font-mono font-bold text-2xl text-orange-500 block mb-3">
-                    {st.step}
-                  </span>
-                  <h3 className="font-display font-semibold text-lg text-ink mb-2">
-                    {st.title}
-                  </h3>
-                  <p className="font-sans text-sm text-slate-600 leading-relaxed">
-                    {st.desc}
-                  </p>
+            {service.steps.map((st, index) => (
+              <Reveal key={st.step} delay={index * 70} y={16} className="h-full">
+                <div className="h-full p-6 rounded-[20px] border border-line bg-sky-50 flex flex-col justify-between">
+                  <div>
+                    <span className="font-mono font-bold text-2xl text-orange-500 block mb-3">
+                      {st.step}
+                    </span>
+                    <h3 className="font-display font-semibold text-lg text-ink mb-2">
+                      {st.title}
+                    </h3>
+                    <p className="font-sans text-sm text-slate-600 leading-relaxed">
+                      {st.desc}
+                    </p>
+                  </div>
                 </div>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -508,42 +530,35 @@ export default function ServiceDetailPage({
       <section className="py-16 sm:py-24 border-b border-line bg-sky-50">
         <div className="max-w-[900px] mx-auto px-5 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <span className="text-orange-500 font-bold uppercase tracking-wider text-xs">
+            <Reveal as="span" y={8} className="block text-orange-500 font-bold uppercase tracking-wider text-xs">
               Knowledge Base
-            </span>
-            <h2 className="font-display font-bold text-3xl text-ink mt-2">
+            </Reveal>
+            <Reveal as="h2" delay={60} y={16} className="font-display font-bold text-3xl text-ink mt-2">
               Frequently Asked Questions
-            </h2>
+            </Reveal>
           </div>
 
-          <div className="space-y-4">
-            {service.faqs.map((faq, i) => (
-              <div
-                key={faq.q}
-                className="p-6 rounded-2xl bg-white border border-line shadow-soft"
-              >
-                <h3 className="font-display font-semibold text-lg text-ink mb-2">
-                  {faq.q}
-                </h3>
-                <p className="font-sans text-sm text-slate-600 leading-relaxed">
-                  {faq.a}
-                </p>
-              </div>
-            ))}
-          </div>
+          <Reveal y={16}>
+            <Accordion
+              items={service.faqs.map((faq) => ({
+                question: faq.q,
+                answer: faq.a,
+              }))}
+            />
+          </Reveal>
         </div>
       </section>
 
       {/* Bottom CTA */}
       <section className="py-16 bg-navy-900 text-white">
         <div className="max-w-[1320px] mx-auto px-5 sm:px-6 lg:px-8 text-center flex flex-col items-center gap-6">
-          <h2 className="font-display font-bold text-3xl sm:text-4xl text-white">
+          <Reveal as="h2" y={16} className="font-display font-bold text-3xl sm:text-4xl text-white">
             Ready to book your next shipment?
-          </h2>
-          <p className="font-sans text-base text-slate-300 max-w-[560px]">
+          </Reveal>
+          <Reveal as="p" delay={60} y={12} className="font-sans text-base text-slate-300 max-w-[560px]">
             Speak with our logistics coordinators today to receive a guaranteed rate quote.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4">
+          </Reveal>
+          <Reveal delay={120} y={12} className="flex flex-col sm:flex-row gap-4">
             <Link href={`/quote?service=${params.slug}`}>
               <Button variant="primary" className="h-[48px] px-8 text-sm font-semibold">
                 Get an Instant Quote
@@ -554,7 +569,7 @@ export default function ServiceDetailPage({
                 Contact Operations
               </Button>
             </Link>
-          </div>
+          </Reveal>
         </div>
       </section>
     </main>

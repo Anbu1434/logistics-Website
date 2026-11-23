@@ -11,6 +11,7 @@ import {
 import { PageHeader } from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Reveal } from "@/components/motion/reveal";
 import { siteConfig } from "@/lib/site";
 
 export default function ContactPage() {
@@ -58,22 +59,22 @@ export default function ContactPage() {
         <div className="max-w-[1320px] mx-auto px-5 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
             {/* Left Column: Direct Info & Operational Hubs */}
-            <div className="lg:col-span-5 flex flex-col gap-8">
+            <Reveal delay={60} y={20} className="lg:col-span-5 flex flex-col gap-8">
               <div>
                 <span className="text-orange-500 font-bold uppercase tracking-wider text-xs">
                   Direct Inquiries
                 </span>
-                <h2 className="font-display font-bold text-3xl text-ink mt-2 mb-4">
+                <Reveal as="h2" delay={60} y={16} className="font-display font-bold text-3xl text-ink mt-2 mb-4">
                   Speak directly with an operations coordinator.
-                </h2>
-                <p className="font-sans text-base text-slate-600 leading-relaxed">
+                </Reveal>
+                <Reveal as="p" delay={120} y={12} className="font-sans text-base text-slate-600 leading-relaxed">
                   We don&apos;t use automated phone trees. You will be connected directly to an experienced logistics coordinator based in your regional timezone.
-                </p>
+                </Reveal>
               </div>
 
-              <div className="space-y-6 pt-6 border-t border-line">
+              <Reveal delay={180} y={12} className="space-y-6 pt-6 border-t border-line">
                 {/* Phone */}
-                <div className="flex items-start gap-4">
+                <Reveal y={8} className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-lg bg-sky-50 border border-line flex items-center justify-center text-orange-500 shrink-0 mt-0.5">
                     <Phone className="w-5 h-5" />
                   </div>
@@ -87,10 +88,10 @@ export default function ContactPage() {
                     </a>
                     <span className="text-xs text-slate-500 block mt-0.5">Toll-free dispatch & rate desk</span>
                   </div>
-                </div>
+                </Reveal>
 
                 {/* Email */}
-                <div className="flex items-start gap-4">
+                <Reveal delay={60} y={8} className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-lg bg-sky-50 border border-line flex items-center justify-center text-orange-500 shrink-0 mt-0.5">
                     <Mail className="w-5 h-5" />
                   </div>
@@ -104,10 +105,10 @@ export default function ContactPage() {
                     </a>
                     <span className="text-xs text-slate-500 block mt-0.5">Average response time: &lt; 20 minutes</span>
                   </div>
-                </div>
+                </Reveal>
 
                 {/* Address */}
-                <div className="flex items-start gap-4">
+                <Reveal delay={120} y={8} className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-lg bg-sky-50 border border-line flex items-center justify-center text-orange-500 shrink-0 mt-0.5">
                     <MapPin className="w-5 h-5" />
                   </div>
@@ -120,10 +121,10 @@ export default function ContactPage() {
                       {siteConfig.contact.address.city}, {siteConfig.contact.address.state} {siteConfig.contact.address.zip}, {siteConfig.contact.address.country}
                     </p>
                   </div>
-                </div>
+                </Reveal>
 
                 {/* Hours */}
-                <div className="flex items-start gap-4">
+                <Reveal delay={180} y={8} className="flex items-start gap-4">
                   <div className="w-10 h-10 rounded-lg bg-sky-50 border border-line flex items-center justify-center text-orange-500 shrink-0 mt-0.5">
                     <Clock className="w-5 h-5" />
                   </div>
@@ -136,23 +137,25 @@ export default function ContactPage() {
                       24/7 Emergency Line available for active shipments
                     </span>
                   </div>
-                </div>
-              </div>
-            </div>
+                </Reveal>
+
+              </Reveal>
+            </Reveal>
 
             {/* Right Column: Contact Message Form */}
-            <div className="lg:col-span-7">
+            <Reveal delay={120} y={20} className="lg:col-span-7">
               <div className="p-8 sm:p-10 rounded-[22px] border border-line bg-white shadow-soft">
-                <h3 className="font-display font-bold text-2xl text-ink mb-2">
+                <Reveal as="h3" y={16} className="font-display font-bold text-2xl text-ink mb-2">
                   Send a Message
-                </h3>
-                <p className="font-sans text-sm text-slate-600 mb-8">
+                </Reveal>
+                <Reveal as="p" delay={60} y={12} className="font-sans text-sm text-slate-600 mb-8">
                   Fill out the form below and an operational specialist will reach out promptly.
-                </p>
+                </Reveal>
 
                 {isSubmitted ? (
-                  <div className="p-6 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex flex-col items-center text-center gap-3">
-                    <CheckCircle2 className="w-10 h-10 text-emerald-600" />
+                  <div className="motion-rise p-6 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex flex-col items-center text-center gap-3"
+                       style={{ "--motion-delay": "0ms", "--rise-distance": "8px", "--rise-duration": "300ms" } as React.CSSProperties}>
+                    <CheckCircle2 className="w-10 h-10 text-emerald-600" aria-hidden="true" />
                     <h4 className="font-display font-bold text-lg">Message Received</h4>
                     <p className="text-sm text-emerald-700 max-w-[420px]">
                       Thank you for contacting us. A logistics coordinator will review your inquiry and reply within 30 minutes.
@@ -177,7 +180,7 @@ export default function ContactPage() {
                           value={formState.name}
                           onChange={(e) => setFormState({ ...formState, name: e.target.value })}
                           placeholder="John Smith"
-                          className="w-full h-[48px] px-4 rounded-lg border border-line bg-sky-50 text-ink placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm font-sans"
+                          className="w-full h-[48px] px-4 rounded-lg border border-line bg-sky-50 text-ink placeholder:text-slate-400 transition-[border-color,box-shadow] duration-150 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm font-sans"
                         />
                       </div>
 
@@ -191,7 +194,7 @@ export default function ContactPage() {
                           value={formState.email}
                           onChange={(e) => setFormState({ ...formState, email: e.target.value })}
                           placeholder="john@company.com"
-                          className="w-full h-[48px] px-4 rounded-lg border border-line bg-sky-50 text-ink placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm font-sans"
+                          className="w-full h-[48px] px-4 rounded-lg border border-line bg-sky-50 text-ink placeholder:text-slate-400 transition-[border-color,box-shadow] duration-150 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm font-sans"
                         />
                       </div>
                     </div>
@@ -207,7 +210,7 @@ export default function ContactPage() {
                           value={formState.phone}
                           onChange={(e) => setFormState({ ...formState, phone: e.target.value })}
                           placeholder="+1 (555) 000-0000"
-                          className="w-full h-[48px] px-4 rounded-lg border border-line bg-sky-50 text-ink placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm font-sans"
+                          className="w-full h-[48px] px-4 rounded-lg border border-line bg-sky-50 text-ink placeholder:text-slate-400 transition-[border-color,box-shadow] duration-150 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm font-sans"
                         />
                       </div>
 
@@ -218,7 +221,7 @@ export default function ContactPage() {
                         <select
                           value={formState.subject}
                           onChange={(e) => setFormState({ ...formState, subject: e.target.value })}
-                          className="w-full h-[48px] px-4 rounded-lg border border-line bg-sky-50 text-ink focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm font-sans"
+                          className="w-full h-[48px] px-4 rounded-lg border border-line bg-sky-50 text-ink transition-[border-color,box-shadow] duration-150 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm font-sans"
                         >
                           <option value="Rate Inquiry">Rate Quote Request</option>
                           <option value="Tracking Status">Active Shipment Support</option>
@@ -239,7 +242,7 @@ export default function ContactPage() {
                         value={formState.message}
                         onChange={(e) => setFormState({ ...formState, message: e.target.value })}
                         placeholder="Please include origin, destination, cargo type, and any handling requirements..."
-                        className="w-full p-4 rounded-lg border border-line bg-sky-50 text-ink placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm font-sans resize-y"
+                        className="w-full p-4 rounded-lg border border-line bg-sky-50 text-ink placeholder:text-slate-400 transition-[border-color,box-shadow] duration-150 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm font-sans resize-y"
                       />
                     </div>
 
@@ -254,7 +257,7 @@ export default function ContactPage() {
                   </form>
                 )}
               </div>
-            </div>
+            </Reveal>
           </div>
         </div>
       </section>

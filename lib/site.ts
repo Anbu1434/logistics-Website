@@ -58,7 +58,6 @@ export const siteConfig = {
         },
       ],
     },
-    { label: "Industries", href: "/industries" },
     { label: "Track", href: "/track" },
     { label: "Contact", href: "/contact" },
   ] as NavItem[],

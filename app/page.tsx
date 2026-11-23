@@ -7,6 +7,7 @@ import { WhyChooseUs } from "@/components/sections/why-choose-us";
 import { HowItWorks } from "@/components/sections/how-it-works";
 import { TrackingCTA } from "@/components/sections/tracking-cta";
 import { Testimonials } from "@/components/sections/testimonials";
+import { FinalCTA } from "@/components/sections/final-cta";
 
 export default function HomePage() {
   return (
@@ -37,6 +38,9 @@ export default function HomePage() {
 
       {/* Section 7.9: Testimonials */}
       <Testimonials />
+
+      {/* Section 7.10: Final CTA */}
+      <FinalCTA />
     </main>
   );
 }

@@ -1,5 +1,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import { Reveal } from "@/components/motion/reveal";
+import { PausableMarquee } from "@/components/motion/pausable-marquee";
 
 // Clean vector logos of realistic commercial shippers and manufacturers
 const partnerLogos = [
@@ -29,44 +31,43 @@ const partnerLogos = [
   {
     name: "Atlas Industrial",
     symbol: (
-      <svg viewBox="0 0 100 28" className="h-6 w-auto fill-current">
-        <polygon points="12,3 22,23 2,23" stroke="currentColor" strokeWidth="2.5" fill="none" />
-        <circle cx="12" cy="16" r="3" fill="currentColor" />
-        <text x="30" y="20" fontSize="14" fontWeight="700" letterSpacing="0.08em" fontFamily="system-ui">
+      <svg viewBox="0 0 120 28" className="h-6 w-auto fill-current">
+        <path d="M4 24L12 4l8 20h-5l-1.5-4h-3L9 24H4zm9-8h-2l1-3 1 3z" />
+        <text x="30" y="20" fontSize="13" fontWeight="700" letterSpacing="0.08em" fontFamily="system-ui">
           ATLAS
         </text>
       </svg>
     ),
   },
   {
-    name: "Orion Express",
+    name: "Meridian Group",
     symbol: (
-      <svg viewBox="0 0 110 28" className="h-6 w-auto fill-current">
-        <path d="M4 14L12 4L20 14L12 24Z" stroke="currentColor" strokeWidth="2.5" fill="none" />
-        <text x="30" y="20" fontSize="14" fontWeight="700" letterSpacing="0.08em" fontFamily="system-ui">
-          ORION
+      <svg viewBox="0 0 130 28" className="h-6 w-auto fill-current">
+        <rect x="3" y="6" width="16" height="16" rx="3" stroke="currentColor" strokeWidth="2.5" fill="none" />
+        <path d="M8 18V10l3 4 3-4v8" stroke="currentColor" strokeWidth="2" fill="none" />
+        <text x="30" y="20" fontSize="13" fontWeight="700" letterSpacing="0.08em" fontFamily="system-ui">
+          MERIDIAN
         </text>
       </svg>
     ),
   },
   {
-    name: "Nordex Heavy Haul",
+    name: "Nordic Supply Co",
     symbol: (
-      <svg viewBox="0 0 115 28" className="h-6 w-auto fill-current">
-        <path d="M6 5v16l14-8L6 5z" fill="currentColor" />
-        <text x="28" y="20" fontSize="13" fontWeight="700" letterSpacing="0.08em" fontFamily="system-ui">
-          NORDEX
+      <svg viewBox="0 0 130 28" className="h-6 w-auto fill-current">
+        <path d="M4 24V4h4l7 12V4h4v20h-4L8 12v12H4z" />
+        <text x="30" y="20" fontSize="13" fontWeight="700" letterSpacing="0.08em" fontFamily="system-ui">
+          NORDIC
         </text>
       </svg>
     ),
   },
   {
-    name: "Pacific Intermodal",
+    name: "Pacific Trade Lines",
     symbol: (
-      <svg viewBox="0 0 115 28" className="h-6 w-auto fill-current">
-        <rect x="5" y="6" width="16" height="14" rx="2" stroke="currentColor" strokeWidth="2.5" fill="none" />
-        <line x1="5" y1="13" x2="21" y2="13" stroke="currentColor" strokeWidth="2" />
-        <text x="28" y="20" fontSize="13" fontWeight="700" letterSpacing="0.08em" fontFamily="system-ui">
+      <svg viewBox="0 0 130 28" className="h-6 w-auto fill-current">
+        <path d="M4 8h16v4H4V8zm3 6h10v6a3 3 0 01-3 3H10a3 3 0 01-3-3v-6z" />
+        <text x="30" y="20" fontSize="13" fontWeight="700" letterSpacing="0.08em" fontFamily="system-ui">
           PACIFIC
         </text>
       </svg>
@@ -82,43 +83,41 @@ export function TrustBar() {
     >
       <div className="max-w-container mx-auto px-6 flex flex-col items-center gap-6">
         {/* Eyebrow-Style Trust Line */}
-        <p className="font-sans font-semibold text-[12px] md:text-[13px] tracking-[0.12em] uppercase text-slate-600 text-center">
+        <Reveal as="p" y={12} duration={300} className="font-sans font-semibold text-[12px] md:text-[13px] tracking-[0.12em] uppercase text-slate-600 text-center">
           Trusted by growing businesses worldwide
-        </p>
+        </Reveal>
 
         {/* Desktop: 6 Logos in a Row, Greyscale at 60% opacity */}
-        <div className="hidden md:flex items-center justify-between gap-8 w-full max-w-4xl opacity-60">
-          {partnerLogos.map((logo) => (
+        <div className="hidden md:flex items-center justify-between gap-8 w-full max-w-4xl">
+          {partnerLogos.map((logo, index) => (
             <div
               key={logo.name}
-              className="text-navy-900 transition-opacity duration-200 hover:opacity-100 flex items-center justify-center"
-              title={logo.name}
+              className="text-navy-900 flex items-center justify-center opacity-60 transition-opacity duration-200 hover:opacity-100"
             >
-              {logo.symbol}
+              <Reveal delay={index * 50} y={8}>
+                <div title={logo.name}>{logo.symbol}</div>
+              </Reveal>
             </div>
           ))}
         </div>
 
-        {/* Mobile: Smooth Slow Marquee (No Horizontal Overflow) */}
-        <div className="md:hidden w-full overflow-hidden marquee-container">
-          <div
-            className="animate-marquee flex items-center gap-8 opacity-60"
-            style={{ animationDuration: "25s" }}
+        {/* Mobile: Slow pausable marquee */}
+        <div className="md:hidden w-full">
+          <PausableMarquee
+            label="Client logos"
+            speedSeconds={25}
+            tone="dark"
+            gap={32}
+            className="opacity-60"
           >
             {partnerLogos.map((logo, idx) => (
-              <div key={`m1-${idx}`} className="shrink-0 text-navy-900">
+              <div key={idx} className="shrink-0 text-navy-900">
                 {logo.symbol}
               </div>
             ))}
-            {partnerLogos.map((logo, idx) => (
-              <div key={`m2-${idx}`} className="shrink-0 text-navy-900">
-                {logo.symbol}
-              </div>
-            ))}
-          </div>
+          </PausableMarquee>
         </div>
       </div>
     </section>
   );
 }
-

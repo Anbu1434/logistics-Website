@@ -1,4 +1,7 @@
+"use client";
+
 import * as React from "react";
+import { LineDraw } from "@/components/motion/line-draw";
 import { cn } from "@/lib/utils";
 
 export interface EyebrowProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -14,12 +17,11 @@ export function Eyebrow({ className, children, ...props }: EyebrowProps) {
       )}
       {...props}
     >
-      <span
+      <LineDraw
         className="w-6 h-[2px] bg-orange-500 rounded-full shrink-0"
-        aria-hidden="true"
+        duration={300}
       />
       <span>{children}</span>
     </div>
   );
 }
-

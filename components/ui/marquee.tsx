@@ -1,4 +1,5 @@
 import * as React from "react";
+import { PausableMarquee } from "@/components/motion/pausable-marquee";
 import { cn } from "@/lib/utils";
 
 export interface MarqueeProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -29,7 +30,6 @@ export function Marquee({
   variant = "navy",
   speedSeconds = 30,
   className,
-  ...props
 }: MarqueeProps) {
   const variantStyles = {
     navy: "bg-navy-900 text-white",
@@ -41,40 +41,27 @@ export function Marquee({
     orange: "text-white/80",
   };
 
-  // Render a duplicated array of items for seamless continuous looping
-  const renderList = (keyPrefix: string) => (
-    <div className="flex items-center gap-8 shrink-0 py-3.5" key={keyPrefix}>
+  return (
+    <PausableMarquee
+      label="Service capabilities ticker"
+      speedSeconds={speedSeconds}
+      tone="light"
+      gap={32}
+      groupClassName="py-3.5"
+      className={cn(
+        "select-none border-y border-white/10",
+        variantStyles[variant],
+        className
+      )}
+    >
       {items.map((item, idx) => (
-        <React.Fragment key={`${keyPrefix}-${idx}`}>
-          <span className="font-sans font-semibold text-[14px] tracking-[0.08em] uppercase whitespace-nowrap">
+        <React.Fragment key={idx}>
+          <span className="whitespace-nowrap font-sans text-[14px] font-semibold uppercase tracking-[0.08em]">
             {item}
           </span>
           <FourPointStar className={starColors[variant]} />
         </React.Fragment>
       ))}
-    </div>
-  );
-
-  return (
-    <div
-      className={cn(
-        "marquee-container w-full overflow-hidden select-none border-y border-white/10",
-        variantStyles[variant],
-        className
-      )}
-      aria-label="Service capabilities ticker"
-      {...props}
-    >
-      <div
-        className="animate-marquee flex items-center"
-        style={{ animationDuration: `${speedSeconds}s` }}
-      >
-        {renderList("first")}
-        {renderList("second")}
-        {renderList("third")}
-        {renderList("fourth")}
-      </div>
-    </div>
+    </PausableMarquee>
   );
 }
-

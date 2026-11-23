@@ -6,25 +6,35 @@ import { cn } from "@/lib/utils";
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: "default" | "flat" | "elevated";
+  interactive?: boolean;
 }
 
 export function Card({
   className,
   variant = "default",
   children,
+  interactive = false,
   ...props
 }: CardProps) {
   return (
     <div
       className={cn(
-        "rounded-card border border-line bg-white transition-all duration-300",
-        variant === "default" && "shadow-soft hover:shadow-lift",
+        "rounded-card border border-line bg-white transition-[border-color,box-shadow,transform] duration-300",
+        variant === "default" &&
+          "shadow-soft hover:shadow-lift motion-safe:hover:-translate-y-1",
         variant === "elevated" && "shadow-lift",
         variant === "flat" && "shadow-none",
+        interactive &&
+          "relative overflow-hidden motion-safe:active:scale-[0.99] motion-safe:transition-transform motion-safe:duration-75",
         className
       )}
       {...props}
     >
+      {interactive && variant === "default" && (
+        <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden" aria-hidden="true">
+          <div className="absolute inset-0 bg-gradient-to-r from-ocean-600/5 via-transparent to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        </div>
+      )}
       {children}
     </div>
   );
@@ -50,7 +60,7 @@ export function ServiceCard({
   return (
     <div
       className={cn(
-        "group relative overflow-hidden rounded-[22px] sm:rounded-[24px] border border-white/85 shadow-soft transition-all duration-300 ease-out hover:-translate-y-2 hover:shadow-lift hover:border-orange-500 min-h-[490px] sm:min-h-[520px] lg:min-h-[560px] flex flex-col justify-between p-6 sm:p-7 lg:p-8 select-none bg-navy-900",
+        "group relative overflow-hidden rounded-[22px] sm:rounded-[24px] border border-white/85 shadow-soft transition-[border-color,box-shadow,transform] duration-300 ease-out motion-safe:hover:-translate-y-2 hover:shadow-lift hover:border-orange-500 min-h-[490px] sm:min-h-[520px] lg:min-h-[560px] flex flex-col justify-between p-6 sm:p-7 lg:p-8 bg-navy-900",
         className
       )}
     >
@@ -61,7 +71,7 @@ export function ServiceCard({
           alt={imageAlt}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="object-cover transition-transform duration-500 ease-out group-hover:scale-105 motion-reduce:transform-none"
+          className="object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:group-hover:scale-105"
         />
       </div>
 
@@ -73,9 +83,9 @@ export function ServiceCard({
 
       {/* Top-Right: Circular Arrow Button */}
       <div className="relative z-10 self-end">
-        <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white text-navy-900 group-hover:bg-orange-500 group-hover:text-white shadow-soft flex items-center justify-center transition-all duration-300 ease-out">
+        <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white text-navy-900 group-hover:bg-orange-500 group-hover:text-white shadow-soft flex items-center justify-center transition-colors duration-300 ease-out">
           <ArrowUpRight
-            className="w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            className="w-5 h-5 sm:w-6 sm:h-6 motion-safe:transition-transform motion-safe:duration-300 motion-safe:group-hover:translate-x-0.5 motion-safe:group-hover:-translate-y-0.5"
             strokeWidth={2}
             aria-hidden="true"
           />

@@ -47,13 +47,23 @@ export function PageHeader({
 
       <div className="max-w-[1320px] mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
         {/* Breadcrumb Navigation */}
-        <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-[13px] text-slate-400 mb-4 select-none">
+        <nav
+          aria-label="Breadcrumb"
+          className="motion-rise flex items-center gap-2 text-[13px] text-slate-400 mb-4 select-none"
+          style={
+            {
+              "--motion-delay": "0ms",
+              "--rise-distance": "8px",
+              "--rise-duration": "300ms",
+            } as React.CSSProperties
+          }
+        >
           <Link href="/" className="hover:text-white transition-colors">
             Home
           </Link>
           {breadcrumbs.map((crumb, idx) => (
             <React.Fragment key={crumb.label + idx}>
-              <ChevronRight className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+              <ChevronRight className="w-3.5 h-3.5 text-slate-500 shrink-0" aria-hidden="true" />
               {crumb.href ? (
                 <Link href={crumb.href} className="hover:text-white transition-colors">
                   {crumb.label}
@@ -69,22 +79,51 @@ export function PageHeader({
 
         {/* Eyebrow */}
         {eyebrow && (
-          <div className="mb-2">
+          <div
+            className="motion-rise mb-2"
+            style={
+              {
+                "--motion-delay": "80ms",
+                "--rise-distance": "8px",
+                "--rise-duration": "300ms",
+              } as React.CSSProperties
+            }
+          >
             <Eyebrow>{eyebrow}</Eyebrow>
           </div>
         )}
 
         {/* H1 Title */}
         <h1 className="font-display font-bold text-[32px] sm:text-[42px] lg:text-[48px] leading-[1.12] tracking-[-0.02em] text-white max-w-[850px] [text-wrap:balance]">
-          {renderTitle()}
+          <span className="motion-mask block">
+            <span
+              className="block"
+              style={
+                {
+                  "--motion-delay": eyebrow ? "160ms" : "80ms",
+                  "--mask-duration": "600ms",
+                } as React.CSSProperties
+              }
+            >
+              {renderTitle()}
+            </span>
+          </span>
         </h1>
 
         {/* Subtitle / One sentence */}
-        <p className="font-sans text-[16px] sm:text-[18px] text-slate-300 max-w-[640px] mt-3 leading-relaxed">
+        <p
+          className="motion-rise font-sans text-[16px] sm:text-[18px] text-slate-300 max-w-[640px] mt-3 leading-relaxed"
+          style={
+            {
+              "--motion-delay": "280ms",
+              "--rise-distance": "12px",
+              "--rise-duration": "400ms",
+            } as React.CSSProperties
+          }
+        >
           {description}
         </p>
       </div>
     </div>
   );
 }
-

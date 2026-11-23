@@ -28,7 +28,7 @@ export function Badge({
 
   const dotColors = {
     default: "bg-navy-900",
-    "in-transit": "bg-ocean-600 animate-pulse",
+    "in-transit": "bg-ocean-600",
     delivered: "bg-success",
     delayed: "bg-orange-500",
     outline: "bg-slate-600",
