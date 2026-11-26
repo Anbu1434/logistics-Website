@@ -39,7 +39,7 @@ const SERVICES_REGISTRY: Record<string, ServiceData> = {
     subtitle: "Global Maritime & Container Shipping",
     description:
       "Cost-effective Full Container Load (FCL) and Less than Container Load (LCL) consolidation across 200+ primary maritime corridors, featuring automated vessel tracking and customs clearance.",
-    image: "/images/service-ocean.webp",
+    image: "/images/service-ocean-new.jpg",
     icon: Ship,
     tag: "FCL & LCL Maritime",
     transitSpeed: "12 - 25 Days",
@@ -114,7 +114,7 @@ const SERVICES_REGISTRY: Record<string, ServiceData> = {
     subtitle: "High-Speed Priority Global Air Cargo",
     description:
       "When speed matters, our priority commercial lift, dedicated air charters, and guaranteed flight schedules ensure your urgent cargo reaches its global destination on time.",
-    image: "/images/service-air.webp",
+    image: "/images/service-air-new.jpg",
     icon: Plane,
     tag: "Expedited Air Cargo",
     transitSpeed: "1 - 5 Days",
@@ -189,7 +189,7 @@ const SERVICES_REGISTRY: Record<string, ServiceData> = {
     subtitle: "Over-the-Road Interstate & Regional Transport",
     description:
       "Flexible Full Truckload (FTL) and Less Than Truckload (LTL) ground transport with real-time GPS fleet telemetry, port drayage, and dedicated regional haulage.",
-    image: "/images/service-road.webp",
+    image: "/images/service-road-new.jpg",
     icon: Truck,
     tag: "FTL, LTL & Drayage",
     transitSpeed: "2 - 5 Days",
@@ -264,7 +264,7 @@ const SERVICES_REGISTRY: Record<string, ServiceData> = {
     subtitle: "Bonded Storage, Staging & Distribution",
     description:
       "Secure bonded storage, high-bay inventory control, temperature-controlled staging, and rapid multi-channel order fulfillment across strategic logistics corridors.",
-    image: "/images/service-warehouse.webp",
+    image: "/images/service-warehouse-new.jpg",
     icon: Warehouse,
     tag: "Bonded Logistics Hub",
     transitSpeed: "Same-Day Fulfillment",

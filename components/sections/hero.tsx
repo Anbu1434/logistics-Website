@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import Image from "next/image";
-import { Pause, Play } from "lucide-react";
 import { siteConfig } from "@/lib/site";
 import { Button } from "@/components/ui/button";
 import { useQuoteModal } from "@/context/quote-modal-context";
@@ -23,8 +22,6 @@ export function Hero() {
   const reducedMotion = useReducedMotion();
 
   const videoRef = React.useRef<HTMLVideoElement>(null);
-  const userPaused = React.useRef(false);
-  const [videoPaused, setVideoPaused] = React.useState(false);
 
   // Pause the background video when it leaves the viewport.
   React.useEffect(() => {
@@ -36,7 +33,7 @@ export function Hero() {
       ([entry]) => {
         if (!entry.isIntersecting) {
           video.pause();
-        } else if (!userPaused.current) {
+        } else {
           video.play().catch(() => {});
         }
       },
@@ -53,20 +50,6 @@ export function Hero() {
       videoRef.current?.pause();
     }
   }, [reducedMotion]);
-
-  const toggleVideo = () => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    userPaused.current = !userPaused.current;
-    setVideoPaused(userPaused.current);
-
-    if (userPaused.current) {
-      video.pause();
-    } else {
-      video.play().catch(() => {});
-    }
-  };
 
   return (
     <section className="relative w-full min-h-[100svh] pt-[100px] min-[390px]:pt-[110px] sm:pt-[120px] lg:pt-[120px] pb-10 min-[390px]:pb-12 lg:pb-[64px] flex items-center overflow-hidden bg-navy-900">
@@ -118,24 +101,6 @@ export function Hero() {
           aria-hidden="true"
         />
       </div>
-
-      {/* Video pause control */}
-      {!reducedMotion && (
-        <button
-          type="button"
-          onClick={toggleVideo}
-          aria-pressed={videoPaused}
-          aria-label={videoPaused ? "Play background video" : "Pause background video"}
-          className="motion-rise absolute top-[84px] right-4 z-20 flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-navy-900/60 text-white transition-colors duration-150 hover:bg-navy-900 md:top-auto md:bottom-6 md:right-6"
-          style={rise(900, 8, 300)}
-        >
-          {videoPaused ? (
-            <Play className="h-4 w-4" aria-hidden="true" />
-          ) : (
-            <Pause className="h-4 w-4" aria-hidden="true" />
-          )}
-        </button>
-      )}
 
       {/* 2. Main Content Container */}
       <div className="relative z-10 max-w-[1320px] mx-auto px-5 sm:px-6 lg:px-8 w-full h-full flex items-center">

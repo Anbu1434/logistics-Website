@@ -497,7 +497,7 @@ export default function StyleguidePage() {
             <ServiceCard
               title="Ocean Freight"
               description="Cost-effective container and bulk cargo shipping across global ports."
-              imageSrc="/images/service-ocean.jpg"
+              imageSrc="/images/service-ocean-new.jpg"
               imageAlt="Container ship docked at port"
               href="/services/ocean-freight"
             />
@@ -505,7 +505,7 @@ export default function StyleguidePage() {
             <ServiceCard
               title="Air Freight"
               description="When speed matters, get priority handling and tight flight schedules."
-              imageSrc="/images/service-air.jpg"
+              imageSrc="/images/service-air-new.jpg"
               imageAlt="Air freight freighter plane loading cargo"
               href="/services/air-freight"
             />
@@ -513,7 +513,7 @@ export default function StyleguidePage() {
             <ServiceCard
               title="Road Freight"
               description="Flexible FTL and LTL transport with real-time GPS tracking."
-              imageSrc="/images/service-road.jpg"
+              imageSrc="/images/service-road-new.jpg"
               imageAlt="Commercial transport trucks on expressway"
               href="/services/road-freight"
             />

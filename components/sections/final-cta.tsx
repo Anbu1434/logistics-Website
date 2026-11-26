@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/motion/reveal";
-import { ImageReveal } from "@/components/motion/image-reveal";
 import { useQuoteModal } from "@/context/quote-modal-context";
 
 export function FinalCTA() {
@@ -15,9 +14,26 @@ export function FinalCTA() {
     <section className="py-16 sm:py-20 lg:py-24 bg-white">
       <div className="max-w-[1320px] mx-auto px-5 sm:px-6 lg:px-8">
         <div className="relative overflow-hidden rounded-[18px] sm:rounded-[22px] bg-navy-900 text-white border border-navy-700 shadow-lift">
-          <div className="grid grid-cols-1 lg:grid-cols-12">
+          {/* Background image: Global Logistics at Twilight */}
+          <div className="absolute inset-0 z-0">
+            <Image
+              src="/images/Global Logistics at Twilight.png"
+              alt="Global logistics operations at twilight"
+              fill
+              sizes="(max-width: 1320px) 100vw, 1320px"
+              className="object-cover object-center lg:object-right"
+              priority={false}
+            />
+            {/* Dark navy gradient overlay to ensure strong WCAG text contrast while showcasing twilight imagery */}
+            <div
+              className="absolute inset-0 bg-gradient-to-t from-navy-900/95 via-navy-900/85 to-navy-900/65 lg:bg-gradient-to-r lg:from-navy-900 lg:via-navy-900/85 lg:to-navy-900/25"
+              aria-hidden="true"
+            />
+          </div>
+
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 min-h-[380px] sm:min-h-[420px] lg:min-h-[460px]">
             {/* Copy and actions */}
-            <div className="relative z-10 lg:col-span-7 p-7 sm:p-10 lg:p-12 xl:p-14">
+            <div className="lg:col-span-7 xl:col-span-6 p-7 sm:p-10 lg:p-12 xl:p-14 flex flex-col justify-center">
               <Reveal y={16}>
                 <span className="font-sans font-bold text-[12px] sm:text-[13px] tracking-[0.14em] uppercase text-orange-500">
                   Move with certainty
@@ -86,30 +102,6 @@ export function FinalCTA() {
                   </span>
                 ))}
               </Reveal>
-            </div>
-
-            {/* Cropped image bleeding to the panel edge */}
-            <div className="relative lg:col-span-5 h-[220px] sm:h-[280px] lg:h-auto min-h-[240px]">
-              <ImageReveal
-                direction="right"
-                duration={800}
-                delay={150}
-                className="absolute inset-0"
-              >
-                <div className="relative h-full w-full">
-                  <Image
-                    src="/images/Container-Ship-at-Twilight.png"
-                    alt="Container ship departing at twilight"
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 42vw"
-                    className="object-cover object-center"
-                  />
-                  <div
-                    className="absolute inset-0 bg-gradient-to-t from-navy-900/60 via-transparent to-transparent lg:bg-gradient-to-r lg:from-navy-900 lg:via-navy-900/25 lg:to-transparent"
-                    aria-hidden="true"
-                  />
-                </div>
-              </ImageReveal>
             </div>
           </div>
         </div>

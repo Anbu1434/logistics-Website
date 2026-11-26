@@ -93,7 +93,7 @@ export function ImageReveal({
       }
       {...props}
     >
-      {children}
+      <div className="image-reveal-clip relative h-full w-full">{children}</div>
     </div>
   );
 }

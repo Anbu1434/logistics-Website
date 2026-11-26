@@ -5,10 +5,10 @@ export interface NavItem {
 }
 
 export const siteConfig = {
-  name: "Your Brand",
-  legalName: "Your Brand Logistics LLC",
+  name: "YOUBAY",
+  legalName: "YOUBAY Logistics LLC",
   tagline: "Where Logistics Meets Precision.",
-  footerBlurb: "End-to-end freight forwarding, customs clearance and live tracking worldwide.",
+  footerBlurb: "End-to-end freight forwarding, customs clearance, and live shipment tracking worldwide.",
   description:
     "Fast, secure, end-to-end freight across cities, countries, and continents. Combining live tracking, dedicated support, and global route expertise.",
   url: "https://yourbrandlogistics.com",

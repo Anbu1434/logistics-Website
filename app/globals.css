@@ -92,23 +92,29 @@
 /* Image reveal                                                        */
 /* ------------------------------------------------------------------ */
 
-.image-reveal {
+/*
+ * The clip-path lives on an inner wrapper, not on `.image-reveal` itself.
+ * Clipping the observed element to zero area makes IntersectionObserver
+ * report a zero-size intersection, so the reveal would never trigger.
+ */
+.image-reveal > .image-reveal-clip {
   clip-path: inset(0 0 0 0);
   transition: clip-path var(--image-duration, 800ms) var(--ease-out)
     var(--image-delay, 0ms);
 }
 
-.image-reveal[data-image-ready="true"][data-visible="false"] {
+.image-reveal[data-image-ready="true"][data-visible="false"]
+  > .image-reveal-clip {
   clip-path: var(--clip-hidden, inset(100% 0 0 0));
 }
 
-.image-reveal > :first-child {
+.image-reveal > .image-reveal-clip > :first-child {
   scale: 1;
   transition: scale var(--image-duration, 800ms) var(--ease-out)
     var(--image-delay, 0ms);
 }
 
-.image-reveal[data-visible="false"] > :first-child {
+.image-reveal[data-visible="false"] > .image-reveal-clip > :first-child {
   scale: 1.04;
 }
 
